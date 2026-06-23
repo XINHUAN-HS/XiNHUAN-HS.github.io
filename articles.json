@@ -1,5 +1,11 @@
 [
   {
+    "title": "Express.js 从入门到部署：全栈后端开发指南",
+    "path": "article/express-guide.html",
+    "description": "从零开始学习 Express.js，涵盖项目初始化、路由设计、中间件、错误处理、数据库集成、测试以及 PM2/Docker 生产部署。",
+    "date": "2026-06-23"
+  },
+  {
     "title": "Electron-Vite 从入门到打包：完整使用指南",
     "path": "article/electron-vite-guide.html",
     "description": "从零开始，学习如何使用 Electron-Vite 搭建、开发和打包 Electron 桌面应用，涵盖环境配置、项目结构、HMR 调试及 electron-builder 打包实战。",
