@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ★ 修改此处：文章标题（显示在浏览器标签页） -->
+    <title>Electron-Vite 从入门到打包：完整使用指南</title>
+    <style>
+        /* ========== 全局基础样式（可保留） ========== */
+        body {
+            background: #0a0e1a;
+            color: #c8d6ff;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 30px 40px;
+            line-height: 1.8;
+            max-width: 820px;
+            margin: 0 auto;
+            overflow-y: auto;          /* 允许垂直滚动 */
+            overflow-x: hidden;        /* 隐藏水平滚动条 */
+        }
+
+        /* ========== 隐藏滚动条（必须保留） ========== */
+        html {
+            scrollbar-width: none;        /* Firefox */
+            -ms-overflow-style: none;     /* IE/Edge 旧版 */
+        }
+        html::-webkit-scrollbar {
+            display: none;                /* Chrome/Safari/Edge 新版 */
+        }
+
+        /* ========== 标题区（日期自动显示在右侧） ========== */
+        h1 { 
+            color: #7aa9ff; 
+            border-bottom: 1px solid rgba(140,180,255,0.2); 
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        h1 .pub-date {
+            font-size: 0.55em;
+            font-weight: normal;
+            opacity: 0.5;
+            white-space: nowrap;
+        }
+
+        /* ========== 二级标题 ========== */
+        h2 { 
+            color: #8ab4ff; 
+            margin-top: 30px; 
+        }
+        h3 { 
+            color: #9bc0ff; 
+            margin-top: 20px; 
+        }
+
+        /* ========== 代码样式 ========== */
+        code { 
+            background: rgba(140,180,255,0.1); 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 0.9em; 
+        }
+        pre { 
+            background: rgba(10,14,30,0.6); 
+            border: 1px solid rgba(140,180,255,0.1); 
+            border-radius: 10px; 
+            padding: 16px; 
+            overflow-x: auto; 
+            font-size: 0.9em;
+        }
+
+        /* ========== 列表 ========== */
+        ul, ol { 
+            padding-left: 20px; 
+        }
+        li { 
+            margin: 6px 0; 
+        }
+
+        /* ========== 引用块 / 提示框 ========== */
+        blockquote {
+            border-left: 3px solid rgba(140,180,255,0.3);
+            margin: 20px 0;
+            padding: 10px 20px;
+            background: rgba(140,180,255,0.04);
+            color: rgba(200,214,255,0.75);
+        }
+        .note {
+            background: rgba(255,204,102,0.08);
+            border-left: 3px solid #ffcc66;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: rgba(255,100,100,0.08);
+            border-left: 3px solid #ff6464;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .tip {
+            background: rgba(100,255,150,0.08);
+            border-left: 3px solid #64ff96;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        /* ========== 链接 ========== */
+        a {
+            color: #8ab4ff;
+        }
+        a:hover {
+            color: #aaccff;
+        }
+
+        /* ========== 表格（可选） ========== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid rgba(140,180,255,0.15);
+            padding: 10px 14px;
+            text-align: left;
+        }
+        th {
+            background: rgba(140,180,255,0.08);
+            color: #8ab4ff;
+        }
+
+        /* ========== 图片（可选） ========== */
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        /* ========== 响应式适配 ========== */
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 16px;
+            }
+            h1 {
+                font-size: 1.4em;
+            }
+            h1 .pub-date {
+                font-size: 0.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ★ 修改此处：文章主标题 + 发布日期 -->
+    <h1>
+        <span>⚡ Electron-Vite 从入门到打包：完整使用指南</span>
+        <span class="pub-date">— 2026-06-23</span>
+    </h1>
+
+    <!-- ★ 文章导语（可选） -->
+    <p>Electron-Vite 是一个新一代的 Electron 开发与构建工具，它结合了 Vite 的极速开发体验和 Electron 的桌面应用能力。本文将带你从零开始，完成项目搭建、开发调试、依赖管理，直至最终打包发布的全流程。</p>
+
+    <!-- ★ 正文开始，按需使用 h2/h3、p、pre、ul、blockquote、.note 等 -->
+
+    <h2>1. 什么是 Electron-Vite？</h2>
+    <p>Electron-Vite 并非一个简单的脚手架，而是一个构建工具。它旨在解决传统 Electron 开发中常见的痛点，如缓慢的热更新、复杂的 Webpack 配置以及繁琐的多进程管理。其核心优势在于：</p>
+    <ul>
+        <li><strong>极速启动</strong>：基于 Vite 的 ESM 原生模块加载，开发服务器秒级启动。</li>
+        <li><strong>智能 HMR</strong>：主进程、渲染进程和预加载脚本都支持热更新，无需手动重启。</li>
+        <li><strong>统一配置</strong>：通过一个 <code>electron.vite.config.js</code> 文件即可管理所有进程的构建配置。</li>
+        <li><strong>内置最佳实践</strong>：集成了资源处理、代码分割、安全策略等开箱即用的功能。</li>
+    </ul>
+
+    <h2>2. 环境准备与项目创建</h2>
+    <p>在开始之前，请确保你的电脑上已经安装了 <strong>Node.js</strong>（推荐 v18 及以上版本）和一个你喜欢的包管理器（npm、yarn 或 pnpm）。</p>
+    
+    <h3>2.1 使用模板创建项目</h3>
+    <p>Electron-Vite 官方提供了一个非常方便的脚手架命令。打开终端，执行以下命令：</p>
+    <pre><code># 使用 npm
+npm create @quick-start/electron@latest my-electron-app
+
+# 或使用 yarn
+yarn create @quick-start/electron my-electron-app
+
+# 或使用 pnpm
+pnpm create @quick-start/electron my-electron-app</code></pre>
+    <p>按照提示选择你喜欢的框架（如 Vue、React 或 Vanilla），然后进入项目目录并安装依赖：</p>
+    <pre><code>cd my-electron-app
+npm install</code></pre>
+
+    <div class="tip">
+        <strong>✅ 最佳实践：</strong>推荐使用 pnpm，因为它不仅速度快，还能有效避免幽灵依赖问题。
+    </div>
+
+    <h2>3. 项目结构与核心配置</h2>
+    <p>创建完成后，你会看到如下项目结构：</p>
+    <pre><code>my-electron-app/
+├── electron/          # 主进程和预加载脚本源码
+│   ├── main/
+│   │   └── index.js
+│   └── preload/
+│       └── index.js
+├── src/               # 渲染进程源码 (你的前端应用)
+│   ├── App.vue
+│   └── main.js
+├── resources/         # 应用图标等静态资源
+├── electron.vite.config.js  # 核心配置文件
+└── package.json</code></pre>
+
+    <h3>3.1 解读配置文件</h3>
+    <p><code>electron.vite.config.js</code> 是整个构建流程的核心。它继承自 Vite 的配置，并为 Electron 的三个进程分别提供了配置入口：</p>
+    <pre><code>import { defineConfig } from 'electron-vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  // 主进程构建配置
+  main: {
+    plugins: [] // 主进程一般不需要太多插件
+  },
+  // 预加载脚本构建配置
+  preload: {
+    plugins: []
+  },
+  // 渲染进程构建配置 (标准 Vite 配置)
+  renderer: {
+    plugins: [vue()]
+  }
+})</code></pre>
+
+    <h2>4. 开发与调试</h2>
+    <p>开发体验是 Electron-Vite 最大的亮点。你只需要运行一个命令：</p>
+    <pre><code>npm run dev</code></pre>
+    <p>这个命令会同时做三件事：</p>
+    <ol>
+        <li>启动 Vite 开发服务器，为渲染进程提供 HMR。</li>
+        <li>编译主进程和预加载脚本，并在文件变化时重新编译。</li>
+        <li>自动打开 Electron 窗口，并将渲染进程指向本地开发服务器。</li>
+    </ol>
+    
+    <div class="note">
+        <strong>💡 提示：</strong>当你修改主进程代码后，Electron 窗口会自动刷新，无需手动关闭重开。这是通过 Electron-Vite 内置的进程管理实现的。
+    </div>
+
+    <h2>5. 引入依赖与 Node.js 模块</h2>
+    <p>在 Electron 开发中，经常需要在主进程中使用 Node.js 原生模块（如 <code>fs</code>, <code>path</code>）或第三方 Node 包。Electron-Vite 对此做了很好的处理：</p>
+    <ul>
+        <li><strong>主进程</strong>：默认将 <code>electron</code> 和 Node.js 内置模块标记为外部依赖，不会被打包进 bundle，而是直接通过 <code>require</code> 引用。</li>
+        <li><strong>渲染进程</strong>：默认不暴露 Node.js API，以保证安全性。如果你需要使用，可以在 <code>electron.vite.config.js</code> 的渲染进程配置中开启 <code>nodeIntegration</code>，但更推荐通过预加载脚本暴露。</li>
+    </ul>
+    <pre><code>// electron/preload/index.js
+const { contextBridge, ipcRenderer } = require('electron')
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  getAppVersion: () => ipcRenderer.invoke('get-app-version')
+})</code></pre>
+
+    <h2>6. 打包与分发</h2>
+    <p>Electron-Vite 集成了 <strong>electron-builder</strong>，使得打包变得非常简单。你只需要在 <code>package.json</code> 中配置好 builder 选项，然后运行命令即可。</p>
+
+    <h3>6.1 配置 package.json</h3>
+    <p>在 <code>package.json</code> 中添加 <code>"build"</code> 字段：</p>
+    <pre><code>{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "dist": "electron-vite build && electron-builder"
+  },
+  "build": {
+    "appId": "com.example.myapp",
+    "productName": "MyApp",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": ["nsis", "portable"]
+    },
+    "mac": {
+      "target": ["dmg", "zip"]
+    },
+    "linux": {
+      "target": ["AppImage", "deb"]
+    }
+  }
+}</code></pre>
+
+    <h3>6.2 执行打包</h3>
+    <p>根据不同平台，运行相应的命令：</p>
+    <pre><code># 打包当前平台
+npm run dist
+
+# 打包特定平台 (需要安装对应平台的依赖)
+npm run dist -- --win
+npm run dist -- --mac
+npm run dist -- --linux</code></pre>
+
+    <div class="warning">
+        <strong>⚠️ 注意：</strong>在 macOS 上打包 Windows 应用或在 Windows 上打包 macOS 应用属于交叉编译，通常需要额外配置，且成功率不高。建议在 CI/CD 环境中使用对应平台的原生 Runner 进行打包。
+    </div>
+
+    <h2>7. 常见问题与优化</h2>
+    <h3>7.1 打包体积过大</h3>
+    <p>Electron 应用的体积主要由 Chromium 和 Node.js 决定。你可以通过以下方式优化：</p>
+    <ul>
+        <li>使用 <code>asar</code> 压缩源码（默认启用）。</li>
+        <li>移除不必要的依赖，尤其是大型的 Node.js 模块。</li>
+        <li>在 <code>electron-builder</code> 配置中使用 <code>files</code> 字段排除无用文件。</li>
+    </ul>
+
+    <h3>7.2 自动更新</h3>
+    <p>结合 <code>electron-updater</code> 可以实现应用的自动更新。你需要配合一个更新服务器（如 GitHub Releases、S3 或自己搭建的服务）。</p>
+    <pre><code>const { autoUpdater } = require('electron-updater')
+
+autoUpdater.checkForUpdatesAndNotify()</code></pre>
+
+    <blockquote>
+        “Electron-Vite 不仅仅是一个构建工具，它代表了一种更现代、更高效的 Electron 开发范式。” —— 社区开发者评价
+    </blockquote>
+
+    <h2>8. 总结</h2>
+    <p>Electron-Vite 极大地简化了 Electron 的开发流程。从创建项目到打包发布，你只需要掌握几个核心命令和一份简洁的配置文件。希望本文能帮助你顺利上手，构建出优秀的桌面应用。</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>阶段</th>
+                <th>关键命令/文件</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>创建项目</td>
+                <td><code>npm create @quick-start/electron</code></td>
+                <td>使用官方脚手架初始化</td>
+            </tr>
+            <tr>
+                <td>开发调试</td>
+                <td><code>npm run dev</code></td>
+                <td>启动开发模式，支持 HMR</td>
+            </tr>
+            <tr>
+                <td>构建生产</td>
+                <td><code>npm run build</code></td>
+                <td>编译所有进程的代码</td>
+            </tr>
+            <tr>
+                <td>打包分发</td>
+                <td><code>npm run dist</code></td>
+                <td>生成安装包或便携版</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ★ 底部无需再写日期，已放在标题旁 -->
+</body>
+</html>
