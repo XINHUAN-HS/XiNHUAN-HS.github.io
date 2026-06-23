@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python 环境变量配置指南</title>
+    <style>
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family: "Segoe UI", sans-serif;
+        padding: 30px 40px;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      /* 隐藏滚动条但允许滚动 */
+      html {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge 旧版 */
+      }
+      html::-webkit-scrollbar {
+        display: none; /* Chrome/Safari/Edge 新版 */
+      }
+      body {
+        overflow-y: auto; /* 允许垂直滚动 */
+        overflow-x: hidden; /* 隐藏水平滚动 */
+      }
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+      }
+      h1 .pub-date {
+        font-size: 0.55em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+      h2 {
+        color: #8ab4ff;
+        margin-top: 30px;
+      }
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.6);
+        border: 1px solid rgba(140, 180, 255, 0.1);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      li {
+        margin: 6px 0;
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.08);
+        border-left: 3px solid #ffcc66;
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <span>🐍 Python 环境变量配置指南</span>
+      <span class="pub-date">— 2026-06-20</span>
+    </h1>
+    <p>
+      环境变量是操作系统级别的变量，用于影响程序的行为。对于 Python
+      开发者来说，正确配置环境变量可以简化开发流程，避免硬编码敏感信息。
+    </p>
+
+    <h2>1. 什么是环境变量？</h2>
+    <p>
+      环境变量是一组键值对，存储在操作系统中。Python 可以通过
+      <code>os.environ</code> 访问它们。常见用途包括：数据库连接字符串、API
+      密钥、调试模式开关等。
+    </p>
+
+    <h2>2. 设置 Python 相关环境变量</h2>
+    <h3>Windows</h3>
+    <ul>
+      <li>打开“系统属性” → “高级” → “环境变量”。</li>
+      <li>
+        在“系统变量”中点击“新建”，输入变量名
+        <code>PYTHONPATH</code>，值为你的模块搜索路径（如
+        <code>C:\my_python_libs</code>）。
+      </li>
+      <li>
+        若要添加 Python 到 PATH，确保 <code>C:\Python39\Scripts\</code> 和
+        <code>C:\Python39\</code> 在 PATH 中。
+      </li>
+    </ul>
+    <h3>macOS / Linux</h3>
+    <pre><code># 临时设置
+export PYTHONPATH="/home/user/my_libs:$PYTHONPATH"
+
+# 永久生效（添加到 ~/.bashrc 或 ~/.zshrc）
+echo 'export PYTHONPATH="/home/user/my_libs:$PYTHONPATH"' >> ~/.bashrc
+source ~/.bashrc</code></pre>
+
+    <h2>3. 在 Python 中读取环境变量</h2>
+    <pre><code>import os
+
+db_host = os.getenv('DB_HOST', 'localhost')
+api_key = os.environ['API_KEY']  # 若不存在会抛出 KeyError
+
+print(f"数据库主机: {db_host}")</code></pre>
+
+    <h2>4. 使用 .env 文件管理环境变量</h2>
+    <p>
+      推荐使用 <code>python-dotenv</code> 库加载
+      <code>.env</code> 文件，避免污染系统环境。
+    </p>
+    <pre><code># 安装
+pip install python-dotenv
+
+# .env 文件内容
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=secret123
+
+# 在代码中加载
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
+print(os.getenv('DB_HOST'))</code></pre>
+
+    <div class="note">
+      <strong>💡 最佳实践：</strong>永远不要将敏感信息提交到版本控制中。将
+      <code>.env</code> 添加到 <code>.gitignore</code>。
+    </div>
+
+    <h2>5. 常见问题</h2>
+    <ul>
+      <li>
+        <strong>Q:</strong> 修改环境变量后为什么没生效？<br />
+        <strong>A:</strong> 需要重启终端或重新加载配置文件（<code
+          >source ~/.bashrc</code
+        >）。
+      </li>
+      <li>
+        <strong>Q:</strong> <code>PYTHONPATH</code> 和
+        <code>sys.path</code> 的关系？<br />
+        <strong>A:</strong> <code>PYTHONPATH</code> 会自动添加到
+        <code>sys.path</code> 中，影响模块导入搜索路径。
+      </li>
+    </ul>
+  </body>
+</html>

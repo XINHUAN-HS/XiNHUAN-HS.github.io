@@ -1,0 +1,26 @@
+[
+    {
+    "title": "文章模板",
+    "path": "article/article-template.html",
+    "description": "本网页,文章撰写模板",
+    "date": "2004-08-15"
+},
+    {
+        "title": "Python 环境变量配置指南",
+        "path": "article/python-env-setup.html",
+        "description": "详细介绍 Python 中环境变量的概念、设置方法、读取方式以及 .env 文件的最佳实践。",
+        "date": "2026-06-20"
+    },
+    {
+        "title": "Java 环境变量配置详解（JDK & Maven）",
+        "path": "article/java-env-setup.html",
+        "description": "手把手教你配置 JAVA_HOME、PATH 和 MAVEN_HOME，并介绍多版本 JDK 管理工具。",
+        "date": "2026-06-18"
+    },
+    {
+        "title": "Node.js 环境变量配置与 .env 最佳实践",
+        "path": "article/node-env-setup.html",
+        "description": "学习如何在 Node.js 中设置和使用环境变量，以及利用 dotenv 和 cross-env 实现优雅的配置管理。",
+        "date": "2026-06-15"
+    }
+]

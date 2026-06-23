@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node.js 环境变量配置与 .env 最佳实践</title>
+    <style>
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family: "Segoe UI", sans-serif;
+        padding: 30px 40px;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      /* 隐藏滚动条但允许滚动 */
+      html {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge 旧版 */
+      }
+      html::-webkit-scrollbar {
+        display: none; /* Chrome/Safari/Edge 新版 */
+      }
+      body {
+        overflow-y: auto; /* 允许垂直滚动 */
+        overflow-x: hidden; /* 隐藏水平滚动 */
+      }
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+      }
+      h1 .pub-date {
+        font-size: 0.55em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+      h2 {
+        color: #8ab4ff;
+        margin-top: 30px;
+      }
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.6);
+        border: 1px solid rgba(140, 180, 255, 0.1);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto;
+      }
+      .tip {
+        background: rgba(100, 255, 150, 0.08);
+        border-left: 3px solid #64ff96;
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <span>🟢 Node.js 环境变量配置与 .env 最佳实践</span>
+      <span class="pub-date">— 2026-06-15</span>
+    </h1>
+    <p>
+      Node.js 通过
+      <code>process.env</code>
+      访问环境变量。合理使用环境变量可以让你的应用更安全、更灵活。
+    </p>
+
+    <h2>1. 设置 Node.js 相关的环境变量</h2>
+    <h3>常用变量</h3>
+    <ul>
+      <li>
+        <code>NODE_ENV</code>: 指定运行环境（development / production / test）
+      </li>
+      <li><code>PORT</code>: 应用监听端口</li>
+      <li><code>DATABASE_URL</code>: 数据库连接字符串</li>
+    </ul>
+
+    <h3>临时设置（命令行）</h3>
+    <pre><code># Windows (CMD)
+set NODE_ENV=production && node app.js
+
+# PowerShell
+$env:NODE_ENV="production"; node app.js
+
+# macOS/Linux
+NODE_ENV=production node app.js</code></pre>
+
+    <h2>2. 使用 dotenv 加载 .env 文件</h2>
+    <p>
+      <code>dotenv</code> 是最流行的 npm 包，用于将
+      <code>.env</code> 文件中的变量加载到 <code>process.env</code>。
+    </p>
+    <pre><code># 安装
+npm install dotenv
+
+# .env 文件（位于项目根目录）
+PORT=3000
+DB_HOST=localhost
+DB_USER=admin
+DB_PASS=s3cret!
+
+# 在入口文件顶部引入
+require('dotenv').config();
+
+console.log(process.env.PORT); // 3000</code></pre>
+
+    <div class="tip">
+      <strong>✅ 最佳实践：</strong>创建
+      <code>.env.example</code> 作为模板提交到 Git，真正的
+      <code>.env</code> 添加到 <code>.gitignore</code>。
+    </div>
+
+    <h2>3. 区分不同环境的配置</h2>
+    <p>
+      可以使用多个 <code>.env</code> 文件，如
+      <code>.env.development</code>、<code>.env.production</code>，并通过
+      <code>NODE_ENV</code> 决定加载哪个。
+    </p>
+    <pre><code>const envFile = `.env.${process.env.NODE_ENV || 'development'}`;
+require('dotenv').config({ path: envFile });</code></pre>
+
+    <h2>4. 在 package.json 中使用 cross-env</h2>
+    <p>为了解决跨平台设置环境变量的差异，推荐使用 <code>cross-env</code>。</p>
+    <pre><code># 安装
+npm install --save-dev cross-env
+
+# package.json scripts
+"scripts": {
+  "start": "cross-env NODE_ENV=production node server.js",
+  "dev": "cross-env NODE_ENV=development nodemon server.js"
+}</code></pre>
+
+    <h2>5. 安全性提醒</h2>
+    <ul>
+      <li>
+        不要在客户端代码中暴露敏感环境变量（Webpack 的
+        <code>DefinePlugin</code> 需谨慎）。
+      </li>
+      <li>
+        生产环境中使用密钥管理服务（如 AWS Secrets Manager）替代
+        <code>.env</code>。
+      </li>
+      <li>定期轮换密钥。</li>
+    </ul>
+  </body>
+</html>

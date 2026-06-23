@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Java 环境变量配置详解</title>
+    <style>
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family: "Segoe UI", sans-serif;
+        padding: 30px 40px;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      /* 隐藏滚动条但允许滚动 */
+      html {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge 旧版 */
+      }
+      html::-webkit-scrollbar {
+        display: none; /* Chrome/Safari/Edge 新版 */
+      }
+      body {
+        overflow-y: auto; /* 允许垂直滚动 */
+        overflow-x: hidden; /* 隐藏水平滚动 */
+      }
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+      }
+      h1 .pub-date {
+        font-size: 0.55em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+      h2 {
+        color: #8ab4ff;
+        margin-top: 30px;
+      }
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.6);
+        border: 1px solid rgba(140, 180, 255, 0.1);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      .warn {
+        background: rgba(255, 100, 100, 0.08);
+        border-left: 3px solid #ff6464;
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <span>☕ Java 环境变量配置详解（JDK & Maven）</span>
+      <span class="pub-date">— 2026-06-18</span>
+    </h1>
+    <p>
+      Java 开发离不开正确的环境变量配置。本文将带你一步步配置
+      <code>JAVA_HOME</code>、<code>PATH</code> 和 <code>MAVEN_HOME</code>。
+    </p>
+
+    <h2>1. 下载并安装 JDK</h2>
+    <p>
+      前往
+      <a href="https://adoptium.net/" style="color: #8ab4ff">Adoptium</a> 下载
+      OpenJDK LTS 版本（如 JDK 17 或 21）。安装时记住安装路径，例如：
+    </p>
+    <ul>
+      <li>
+        Windows:
+        <code>C:\Program Files\Eclipse Adoptium\jdk-17.0.9.9-hotspot</code>
+      </li>
+      <li>
+        macOS/Linux: <code>/usr/lib/jvm/jdk-17</code> 或
+        <code>/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home</code>
+      </li>
+    </ul>
+
+    <h2>2. 设置 JAVA_HOME</h2>
+    <h3>Windows</h3>
+    <pre><code># 系统变量中添加
+变量名: JAVA_HOME
+变量值: C:\Program Files\Eclipse Adoptium\jdk-17.0.9.9-hotspot
+
+# 然后在 PATH 中添加
+%JAVA_HOME%\bin</code></pre>
+
+    <h3>macOS / Linux</h3>
+    <pre><code># 编辑 ~/.bashrc 或 ~/.zshrc
+export JAVA_HOME=/usr/lib/jvm/jdk-17
+export PATH=$JAVA_HOME/bin:$PATH
+
+# 使生效
+source ~/.bashrc</code></pre>
+
+    <h2>3. 验证配置</h2>
+    <pre><code>java -version
+javac -version
+echo $JAVA_HOME   # macOS/Linux
+echo %JAVA_HOME%  # Windows</code></pre>
+
+    <h2>4. 配置 Maven 环境变量</h2>
+    <p>
+      下载 Maven 并解压，然后设置 <code>MAVEN_HOME</code> 和 <code>PATH</code>。
+    </p>
+    <pre><code># 设置 MAVEN_HOME
+export MAVEN_HOME=/opt/apache-maven-3.9.6
+export PATH=$MAVEN_HOME/bin:$PATH
+
+# 验证
+mvn -version</code></pre>
+
+    <div class="warn">
+      <strong>⚠️ 注意：</strong>确保 <code>JAVA_HOME</code> 指向 JDK
+      的根目录（包含 bin、lib 等子目录），而不是 JRE 目录。
+    </div>
+
+    <h2>5. 多版本 JDK 管理</h2>
+    <p>
+      推荐使用工具如 <code>jEnv</code>（macOS/Linux）或
+      <code>SDKMAN!</code> 轻松切换 JDK 版本。
+    </p>
+    <pre><code># 使用 SDKMAN! 安装和管理
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk list java
+sdk install java 21.0.1-tem
+sdk use java 21.0.1-tem</code></pre>
+  </body>
+</html>
