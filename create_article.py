@@ -20,20 +20,15 @@ def extract_meta_from_html(file_path):
     if not h1_match:
         return None
     h1_inner = h1_match.group(1)
-
-    # 2. Extract date from <span class="pub-date">
     date_match = re.search(
         r'<span\s+class="pub-date"[^>]*>\s*[\u2014\u2013]?\s*(.*?)\s*</span>',
         h1_inner, re.DOTALL
     )
     date_str = date_match.group(1).strip() if date_match else ''
-
-    # 3. Clean title by removing all HTML tags
     title = re.sub(r'<[^>]+>', '', h1_inner).strip()
     if date_str and date_str in title:
         title = title.replace(date_str, '').strip().rstrip('\u2014').strip()
 
-    # 4. Find the first <p> after </h1> as description
     h1_end = h1_match.end()
     after_h1 = content[h1_end:]
     p_match = re.search(r'<p[^>]*>(.*?)</p>', after_h1, re.DOTALL)
@@ -42,7 +37,6 @@ def extract_meta_from_html(file_path):
         desc_raw = p_match.group(1)
         description = re.sub(r'<[^>]+>', '', desc_raw).strip()
 
-    # 5. Relative path
     rel_path = os.path.relpath(file_path).replace('\\', '/')
 
     return {
