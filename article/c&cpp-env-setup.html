@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C/C++ 环境变量配置指南</title>
+    <style>
+        body {
+            background: #0a0e1a;
+            color: #c8d6ff;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 30px 40px;
+            line-height: 1.8;
+            max-width: 820px;
+            margin: 0 auto;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        html::-webkit-scrollbar {
+            display: none;
+        }
+        h1 { 
+            color: #7aa9ff; 
+            border-bottom: 1px solid rgba(140,180,255,0.2); 
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        h1 .pub-date {
+            font-size: 0.55em;
+            font-weight: normal;
+            opacity: 0.5;
+            white-space: nowrap;
+        }
+        h2 { color: #8ab4ff; margin-top: 30px; }
+        h3 { color: #9bc0ff; margin-top: 20px; }
+        code { background: rgba(140,180,255,0.1); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; }
+        pre { background: rgba(10,14,30,0.6); border: 1px solid rgba(140,180,255,0.1); border-radius: 10px; padding: 16px; overflow-x: auto; font-size: 0.9em; }
+        ul, ol { padding-left: 20px; }
+        li { margin: 6px 0; }
+        blockquote {
+            border-left: 3px solid rgba(140,180,255,0.3);
+            margin: 20px 0;
+            padding: 10px 20px;
+            background: rgba(140,180,255,0.04);
+            color: rgba(200,214,255,0.75);
+        }
+        .note {
+            background: rgba(255,204,102,0.08);
+            border-left: 3px solid #ffcc66;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: rgba(255,100,100,0.08);
+            border-left: 3px solid #ff6464;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .tip {
+            background: rgba(100,255,150,0.08);
+            border-left: 3px solid #64ff96;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        a { color: #8ab4ff; }
+        a:hover { color: #aaccff; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid rgba(140,180,255,0.15);
+            padding: 10px 14px;
+            text-align: left;
+        }
+        th {
+            background: rgba(140,180,255,0.08);
+            color: #8ab4ff;
+        }
+        img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
+        @media (max-width: 640px) {
+            body { padding: 20px 16px; }
+            h1 { font-size: 1.4em; }
+            h1 .pub-date { font-size: 0.5em; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <span>⚙️ C/C++ 环境变量配置指南</span>
+        <span class="pub-date">— 2026-06-22</span>
+    </h1>
+
+    <p>C/C++ 开发的第一步是正确配置编译器和构建工具的环境变量。本文涵盖 GCC、MinGW-w64 以及 Visual Studio 命令行工具的 PATH 设置，帮助你从终端直接调用编译器。</p>
+
+    <h2>1. 编译器选择与环境变量概览</h2>
+    <p>常见的 C/C++ 编译器包括：</p>
+    <ul>
+        <li><strong>GCC</strong>（Linux/macOS 默认）</li>
+        <li><strong>MinGW-w64</strong>（Windows 下的 GCC 移植版）</li>
+        <li><strong>MSVC</strong>（Visual Studio 自带编译器）</li>
+    </ul>
+    <p>核心环境变量：</p>
+    <table>
+        <thead>
+            <tr><th>变量名</th><th>作用</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>PATH</code></td><td>添加编译器所在目录，使 <code>gcc</code> / <code>g++</code> / <code>cl</code> 命令全局可用</td></tr>
+            <tr><td><code>CC</code></td><td>指定 C 编译器路径（常用于 Makefile）</td></tr>
+            <tr><td><code>CXX</code></td><td>指定 C++ 编译器路径</td></tr>
+            <tr><td><code>INCLUDE</code></td><td>头文件搜索路径（MSVC 常用）</td></tr>
+            <tr><td><code>LIB</code></td><td>库文件搜索路径（MSVC 常用）</td></tr>
+        </tbody>
+    </table>
+
+    <h2>2. Windows 下配置 MinGW-w64</h2>
+    <h3>2.1 下载与安装</h3>
+    <p>访问 <a href="https://www.mingw-w64.org/" target="_blank">MinGW-w64 官网</a> 下载安装包，或使用 <a href="https://github.com/niXman/mingw-builds-binaries/releases" target="_blank">niXman 的预编译版本</a>。解压到 <code>C:\mingw64</code>。</p>
+
+    <h3>2.2 配置 PATH</h3>
+    <ol>
+        <li>右键“此电脑” → 属性 → 高级系统设置 → 环境变量。</li>
+        <li>在“系统变量”中找到 <code>Path</code>，点击编辑。</li>
+        <li>新增条目：<code>C:\mingw64\bin</code>。</li>
+        <li>依次点击确定保存。</li>
+    </ol>
+
+    <div class="tip">
+        <strong>✅ 验证：</strong>打开新终端输入 <code>gcc --version</code>，若显示版本信息则配置成功。
+    </div>
+
+    <pre><code>gcc --version
+g++ --version</code></pre>
+
+    <h2>3. Linux / macOS 配置 GCC</h2>
+    <p>大多数 Linux 发行版和 macOS（安装 Xcode Command Line Tools 后）已自带 GCC。如需手动安装：</p>
+
+    <pre><code># Ubuntu/Debian
+sudo apt update
+sudo apt install build-essential
+
+# macOS（安装 Homebrew 后）
+brew install gcc</code></pre>
+
+    <p>安装后检查 <code>/usr/bin/gcc</code> 是否已在 PATH 中：</p>
+    <pre><code>which gcc
+echo $PATH | grep gcc</code></pre>
+
+    <div class="note">
+        <strong>💡 提示：</strong>macOS 上的 <code>gcc</code> 实际上是 Clang 的别名。如需真正 GNU GCC，使用 <code>gcc-12</code>（版本号因安装而异）。
+    </div>
+
+    <h2>4. Visual Studio MSVC 命令行配置</h2>
+    <p>Visual Studio 不将编译器直接加入系统 PATH，而是通过 <strong>Developer Command Prompt</strong> 临时设置环境。但你可以手动添加：</p>
+
+    <ol>
+        <li>找到 MSVC 编译器目录，例如：<br><code>C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.40.33807\bin\Hostx64\x64</code></li>
+        <li>将该路径添加到系统 PATH。</li>
+        <li>同时添加 <code>INCLUDE</code> 和 <code>LIB</code> 变量指向对应的 include 和 lib 文件夹。</li>
+    </ol>
+
+    <div class="warning">
+        <strong>⚠️ 注意：</strong>手动配置 MSVC 环境变量较为复杂且易出错，推荐直接使用 Visual Studio 自带的“开发人员命令提示符”。
+    </div>
+
+    <h2>5. 使用 CMake 时的环境变量</h2>
+    <p>CMake 会自动检测系统中的编译器，你也可以通过环境变量强制指定：</p>
+    <pre><code># Linux/macOS
+export CC=/usr/bin/gcc
+export CXX=/usr/bin/g++
+
+# Windows PowerShell
+$env:CC="C:\mingw64\bin\gcc.exe"
+$env:CXX="C:\mingw64\bin\g++.exe"</code></pre>
+
+    <div class="tip">
+        <strong>✅ 最佳实践：</strong>将上述 export 命令写入 <code>.bashrc</code> 或 <code>.zshrc</code>，实现永久生效。
+    </div>
+
+    <h2>6. 多版本编译器管理</h2>
+    <p>推荐使用 <strong>update-alternatives</strong>（Linux）或 <strong>Homebrew</strong>（macOS）切换 GCC 版本：</p>
+    <pre><code># Linux
+sudo update-alternatives --config gcc
+
+# macOS
+brew switch gcc 12</code></pre>
+
+    <blockquote>
+        “正确的环境变量配置，是 C/C++ 高效开发的基石。”
+    </blockquote>
+
+</body>
+</html>
