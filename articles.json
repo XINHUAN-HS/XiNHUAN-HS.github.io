@@ -17,6 +17,18 @@
     "description": "详尽介绍 C/C++ 开发环境的搭建方法，包括编译器安装、IDE 配置、构建工具链以及跨平台开发注意事项。",
     "date": "2026-06-23"
   },
+ {
+    "title": "Vite 从入门到精通：下一代前端构建工具实战指南",
+    "path": "article/vite-guide.html",
+    "description": "全面讲解 Vite 的使用，涵盖项目创建、配置文件、HMR 开发、环境变量、生产构建、插件系统及 Nginx/Vercel 部署等核心内容。",
+    "date": "2026-06-21"
+  },
+  {
+    "title": "Vue 2 & Vue 3 完整指南：从入门到项目实战",
+    "path": "article/vue-guide.html",
+    "description": "系统对比 Vue 2 与 Vue 3，涵盖 Options API、Composition API、生命周期、状态管理（Vuex vs Pinia）、路由迁移及项目实战，助你快速上手并平滑迁移。",
+    "date": "2026-06-21"
+  },
   {
     "title": "Python 环境变量配置指南",
     "path": "article/python-env-setup.html",
