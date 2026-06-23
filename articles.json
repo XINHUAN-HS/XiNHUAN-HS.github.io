@@ -1,10 +1,10 @@
 [
-    {
-    "title": "文章模板",
-    "path": "article/article-template.html",
-    "description": "本网页,文章撰写模板",
-    "date": "2004-08-15"
-},
+  {
+    "title": "C/C++ 环境配置完全指南",
+    "path": "article/c&cpp-env-setup.html",
+    "description": "详尽介绍 C/C++ 开发环境的搭建方法，包括编译器安装、IDE 配置、构建工具链以及跨平台开发注意事项。",
+    "date": "2026-06-23"
+    },
     {
         "title": "Python 环境变量配置指南",
         "path": "article/python-env-setup.html",
@@ -22,5 +22,11 @@
         "path": "article/node-env-setup.html",
         "description": "学习如何在 Node.js 中设置和使用环境变量，以及利用 dotenv 和 cross-env 实现优雅的配置管理。",
         "date": "2026-06-15"
+    },
+    {
+    "title": "文章模板",
+    "path": "article/article-template.html",
+    "description": "本网页,文章撰写模板",
+    "date": "2004-08-15"
     }
 ]
