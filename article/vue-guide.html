@@ -1,185 +1,281 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vue 2 & Vue 3 完整指南：从入门到项目实战</title>
     <style>
-        /* ========== 全局基础样式 ========== */
-        body {
-            background: #0a0e1a;
-            color: #c8d6ff;
-            font-family: 'Segoe UI', sans-serif;
-            padding: 30px 40px;
-            line-height: 1.8;
-            max-width: 820px;
-            margin: 0 auto;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-        html {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        html::-webkit-scrollbar {
-            display: none;
-        }
+      /* ========== 全局基础样式 ========== */
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: clamp(16px, 4vw, 40px); /* 窄屏缩小边距 */
+        line-height: 1.8;
+        max-width: 860px; /* 略宽一点，适应更大屏幕 */
+        margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
 
-        /* ========== 标题区 ========== */
-        h1 { 
-            color: #7aa9ff; 
-            border-bottom: 1px solid rgba(140,180,255,0.2); 
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 10px;
+      /* ========== 隐藏滚动条（必须保留） ========== */
+      html {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge 旧版 */
+      }
+      html::-webkit-scrollbar {
+        display: none; /* Chrome/Safari/Edge 新版 */
+      }
+
+      /* ========== 标题区（日期自动显示在右侧） ========== */
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: clamp(1.3rem, 5vw, 2rem); /* 标题自适应 */
+      }
+      h1 .pub-date {
+        font-size: 0.55em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+
+      /* ========== 二级标题 ========== */
+      h2 {
+        color: #8ab4ff;
+        margin-top: 30px;
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
+      }
+      h3 {
+        color: #9bc0ff;
+        margin-top: 20px;
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+      }
+
+      /* ========== 段落与文本 ========== */
+      p {
+        font-size: clamp(0.95rem, 3vw, 1.05rem);
+      }
+
+      /* ========== 代码样式 ========== */
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        word-break: break-word; /* 防止长代码溢出 */
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.6);
+        border: 1px solid rgba(140, 180, 255, 0.1);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto; /* 窄屏可横向滚动 */
+        font-size: 0.82em;
+        -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+      }
+
+      /* ========== 列表 ========== */
+      ul,
+      ol {
+        padding-left: 20px;
+      }
+      li {
+        margin: 6px 0;
+      }
+
+      /* ========== 引用块 / 提示框 ========== */
+      blockquote {
+        border-left: 3px solid rgba(140, 180, 255, 0.3);
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(140, 180, 255, 0.04);
+        color: rgba(200, 214, 255, 0.75);
+      }
+      .note,
+      .warning,
+      .tip {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+        font-size: clamp(0.88rem, 2.8vw, 1rem);
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.08);
+        border-left: 3px solid #ffcc66;
+      }
+      .warning {
+        background: rgba(255, 100, 100, 0.08);
+        border-left: 3px solid #ff6464;
+      }
+      .tip {
+        background: rgba(100, 255, 150, 0.08);
+        border-left: 3px solid #64ff96;
+      }
+
+      /* ========== 链接 ========== */
+      a {
+        color: #8ab4ff;
+        word-break: break-all; /* 长链接换行 */
+      }
+      a:hover {
+        color: #aaccff;
+      }
+
+      /* ========== 表格（窄屏可横向滚动） ========== */
+      .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 20px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 360px; /* 保证窄屏时出现滚动条 */
+      }
+      th,
+      td {
+        border: 1px solid rgba(140, 180, 255, 0.15);
+        padding: 10px 14px;
+        text-align: left;
+        font-size: clamp(0.83rem, 2.5vw, 0.94rem);
+      }
+      th {
+        background: rgba(140, 180, 255, 0.08);
+        color: #8ab4ff;
+      }
+
+      /* ========== 图片 ========== */
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+
+      /* ========== 响应式适配（细调） ========== */
+      @media (max-width: 800px) {
+        body {
+          padding: 20px 16px;
+        }
+        h1 {
+          flex-direction: column; /* 标题与日期上下排列 */
+          align-items: flex-start;
         }
         h1 .pub-date {
-            font-size: 0.55em;
-            font-weight: normal;
-            opacity: 0.5;
-            white-space: nowrap;
+          font-size: 0.48em;
         }
-
-        /* ========== 二级标题 ========== */
-        h2 { color: #8ab4ff; margin-top: 30px; }
-        h3 { color: #9bc0ff; margin-top: 20px; }
-
-        /* ========== 代码样式 ========== */
-        code { 
-            background: rgba(140,180,255,0.1); 
-            padding: 2px 8px; 
-            border-radius: 4px; 
-            font-size: 0.9em; 
+        pre {
+          padding: 14px;
+          font-size: 0.76em;
         }
-        pre { 
-            background: rgba(10,14,30,0.6); 
-            border: 1px solid rgba(140,180,255,0.1); 
-            border-radius: 10px; 
-            padding: 16px; 
-            overflow-x: auto; 
-            font-size: 0.9em;
-        }
-
-        /* ========== 列表 ========== */
-        ul, ol { padding-left: 20px; }
-        li { margin: 6px 0; }
-
-        /* ========== 引用块 / 提示框 ========== */
-        blockquote {
-            border-left: 3px solid rgba(140,180,255,0.3);
-            margin: 20px 0;
-            padding: 10px 20px;
-            background: rgba(140,180,255,0.04);
-            color: rgba(200,214,255,0.75);
-        }
-        .note {
-            background: rgba(255,204,102,0.08);
-            border-left: 3px solid #ffcc66;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin: 20px 0;
-        }
-        .warning {
-            background: rgba(255,100,100,0.08);
-            border-left: 3px solid #ff6464;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin: 20px 0;
-        }
+        .note,
+        .warning,
         .tip {
-            background: rgba(100,255,150,0.08);
-            border-left: 3px solid #64ff96;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin: 20px 0;
+          padding: 11px 13px;
         }
+        th,
+        td {
+          padding: 9px 11px;
+        }
+      }
 
-        /* ========== 链接 ========== */
-        a { color: #8ab4ff; }
-        a:hover { color: #aaccff; }
-
-        /* ========== 表格 ========== */
+      @media (max-width: 520px) {
+        body {
+          padding: 14px 10px;
+        }
+        h2 {
+          margin-top: 26px;
+        }
+        h3 {
+          margin-top: 18px;
+        }
+        pre {
+          padding: 10px;
+          font-size: 0.7em;
+        }
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
+          min-width: 280px;
         }
-        th, td {
-            border: 1px solid rgba(140,180,255,0.15);
-            padding: 10px 14px;
-            text-align: left;
+        th,
+        td {
+          padding: 7px 8px;
+          font-size: 0.77rem;
         }
-        th {
-            background: rgba(140,180,255,0.08);
-            color: #8ab4ff;
-        }
-
-        /* ========== 响应式 ========== */
-        @media (max-width: 640px) {
-            body { padding: 20px 16px; }
-            h1 { font-size: 1.4em; }
-            h1 .pub-date { font-size: 0.5em; }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <h1>
-        <span>🟢 Vue 2 & Vue 3 完整指南：从入门到项目实战</span>
-        <span class="pub-date">— 2026-06-21</span>
+      <span>🟢 Vue 2 & Vue 3 完整指南：从入门到项目实战</span>
+      <span class="pub-date">— 2026-06-21</span>
     </h1>
 
-    <p>Vue.js 是目前最受欢迎的前端框架之一，广泛应用于单页应用和企业级项目。Vue 2 奠定了生态基础，而 Vue 3 带来了 Composition API、TypeScript 深度集成、性能大幅提升等重大改进。本文将对两个版本进行系统梳理，帮助开发者理解差异、平滑迁移，并掌握实际项目中的核心技能。</p>
+    <p>
+      Vue.js 是目前最受欢迎的前端框架之一，广泛应用于单页应用和企业级项目。Vue 2
+      奠定了生态基础，而 Vue 3 带来了 Composition API、TypeScript
+      深度集成、性能大幅提升等重大改进。本文将对两个版本进行系统梳理，帮助开发者理解差异、平滑迁移，并掌握实际项目中的核心技能。
+    </p>
 
     <h2>1. Vue 2 vs Vue 3：核心区别一览</h2>
     <p>在深入学习之前，先了解两个版本的主要差异：</p>
-    <table>
+    <div class="table-wrapper">
+      <table>
         <thead>
-            <tr>
-                <th>维度</th>
-                <th>Vue 2</th>
-                <th>Vue 3</th>
-            </tr>
+          <tr>
+            <th>维度</th>
+            <th>Vue 2</th>
+            <th>Vue 3</th>
+          </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>响应式原理</td>
-                <td><code>Object.defineProperty</code>（无法检测新增/删除属性）</td>
-                <td><code>Proxy</code>（完美拦截对象所有操作）</td>
-            </tr>
-            <tr>
-                <td>API 风格</td>
-                <td>Options API（data、methods、computed 等选项）</td>
-                <td>Options API + Composition API（setup 函数）</td>
-            </tr>
-            <tr>
-                <td>TypeScript 支持</td>
-                <td>需额外装饰器或类组件</td>
-                <td>原生支持，类型推导完善</td>
-            </tr>
-            <tr>
-                <td>虚拟 DOM</td>
-                <td>传统 diff</td>
-                <td>静态标记 + PatchFlag，性能提升 1.3~2 倍</td>
-            </tr>
-            <tr>
-                <td>Tree Shaking</td>
-                <td>不支持</td>
-                <td>支持，未使用的 API 不打包</td>
-            </tr>
-            <tr>
-                <td>Fragment / Teleport / Suspense</td>
-                <td>不支持</td>
-                <td>原生支持</td>
-            </tr>
+          <tr>
+            <td>响应式原理</td>
+            <td><code>Object.defineProperty</code>（无法检测新增/删除属性）</td>
+            <td><code>Proxy</code>（完美拦截对象所有操作）</td>
+          </tr>
+          <tr>
+            <td>API 风格</td>
+            <td>Options API（data、methods、computed 等选项）</td>
+            <td>Options API + Composition API（setup 函数）</td>
+          </tr>
+          <tr>
+            <td>TypeScript 支持</td>
+            <td>需额外装饰器或类组件</td>
+            <td>原生支持，类型推导完善</td>
+          </tr>
+          <tr>
+            <td>虚拟 DOM</td>
+            <td>传统 diff</td>
+            <td>静态标记 + PatchFlag，性能提升 1.3~2 倍</td>
+          </tr>
+          <tr>
+            <td>Tree Shaking</td>
+            <td>不支持</td>
+            <td>支持，未使用的 API 不打包</td>
+          </tr>
+          <tr>
+            <td>Fragment / Teleport / Suspense</td>
+            <td>不支持</td>
+            <td>原生支持</td>
+          </tr>
         </tbody>
-    </table>
-
+      </table>
+    </div>
     <div class="note">
-        <strong>💡 版本现状：</strong>Vue 2 已于 2023 年 12 月 31 日停止维护（EOL），官方强烈建议新项目使用 Vue 3。但大量存量项目仍运行在 Vue 2 上，因此了解两者都很有必要。
+      <strong>💡 版本现状：</strong>Vue 2 已于 2023 年 12 月 31
+      日停止维护（EOL），官方强烈建议新项目使用 Vue 3。但大量存量项目仍运行在
+      Vue 2 上，因此了解两者都很有必要。
     </div>
 
     <h2>2. 项目创建与初始化</h2>
@@ -219,7 +315,10 @@ export default {
 &lt;/script&gt;</code></pre>
 
     <h2>4. Composition API（Vue 3 特有）</h2>
-    <p>Composition API 通过 <code>setup</code> 函数组织逻辑，更适合复杂组件和逻辑复用：</p>
+    <p>
+      Composition API 通过
+      <code>setup</code> 函数组织逻辑，更适合复杂组件和逻辑复用：
+    </p>
     <pre><code>&lt;script setup&gt;
 import { ref, computed } from 'vue'
 
@@ -239,62 +338,135 @@ function reverseMessage() {
 &lt;/template&gt;</code></pre>
 
     <div class="tip">
-        <strong>✅ 最佳实践：</strong>Vue 3 项目优先使用 <code>&lt;script setup&gt;</code> 语法糖，代码更简洁，类型推导更好。
+      <strong>✅ 最佳实践：</strong>Vue 3 项目优先使用
+      <code>&lt;script setup&gt;</code> 语法糖，代码更简洁，类型推导更好。
     </div>
 
     <h2>5. 生命周期钩子对比</h2>
-    <p>Vue 3 的生命周期钩子命名改为 <code>onXxx</code> 形式，且只能在 <code>setup</code> 中调用：</p>
+    <p>
+      Vue 3 的生命周期钩子命名改为 <code>onXxx</code> 形式，且只能在
+      <code>setup</code> 中调用：
+    </p>
     <table>
-        <thead>
-            <tr>
-                <th>Vue 2</th>
-                <th>Vue 3 (Composition API)</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td><code>beforeCreate</code></td><td>—（在 setup 中直接执行）</td><td>实例初始化前</td></tr>
-            <tr><td><code>created</code></td><td>—（在 setup 中直接执行）</td><td>实例创建完成</td></tr>
-            <tr><td><code>beforeMount</code></td><td><code>onBeforeMount</code></td><td>挂载前</td></tr>
-            <tr><td><code>mounted</code></td><td><code>onMounted</code></td><td>挂载后</td></tr>
-            <tr><td><code>beforeUpdate</code></td><td><code>onBeforeUpdate</code></td><td>更新前</td></tr>
-            <tr><td><code>updated</code></td><td><code>onUpdated</code></td><td>更新后</td></tr>
-            <tr><td><code>beforeDestroy</code></td><td><code>onBeforeUnmount</code></td><td>卸载前</td></tr>
-            <tr><td><code>destroyed</code></td><td><code>onUnmounted</code></td><td>卸载后</td></tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>Vue 2</th>
+          <th>Vue 3 (Composition API)</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>beforeCreate</code></td>
+          <td>—（在 setup 中直接执行）</td>
+          <td>实例初始化前</td>
+        </tr>
+        <tr>
+          <td><code>created</code></td>
+          <td>—（在 setup 中直接执行）</td>
+          <td>实例创建完成</td>
+        </tr>
+        <tr>
+          <td><code>beforeMount</code></td>
+          <td><code>onBeforeMount</code></td>
+          <td>挂载前</td>
+        </tr>
+        <tr>
+          <td><code>mounted</code></td>
+          <td><code>onMounted</code></td>
+          <td>挂载后</td>
+        </tr>
+        <tr>
+          <td><code>beforeUpdate</code></td>
+          <td><code>onBeforeUpdate</code></td>
+          <td>更新前</td>
+        </tr>
+        <tr>
+          <td><code>updated</code></td>
+          <td><code>onUpdated</code></td>
+          <td>更新后</td>
+        </tr>
+        <tr>
+          <td><code>beforeDestroy</code></td>
+          <td><code>onBeforeUnmount</code></td>
+          <td>卸载前</td>
+        </tr>
+        <tr>
+          <td><code>destroyed</code></td>
+          <td><code>onUnmounted</code></td>
+          <td>卸载后</td>
+        </tr>
+      </tbody>
     </table>
 
     <h2>6. 从 Vue 2 迁移到 Vue 3</h2>
     <p>如果你正在维护 Vue 2 项目，可以考虑逐步迁移。主要注意事项：</p>
     <ul>
-        <li><strong>破坏性变更</strong>：<code>$listeners</code> 合并到 <code>$attrs</code>，<code>v-model</code> 默认使用 <code>modelValue</code>，<code>key</code> 不再支持 <code>v-if</code> 分支等。</li>
-        <li><strong>全局 API 更改</strong>：<code>Vue.prototype</code> → <code>app.config.globalProperties</code>，<code>Vue.component</code> → <code>app.component</code>。</li>
-        <li><strong>过滤器 filters</strong> 已被移除，改用计算属性或方法。</li>
-        <li><strong>事件总线</strong>：推荐使用 mitt 或 Pinia 替代 <code>$on/$emit</code>。</li>
+      <li>
+        <strong>破坏性变更</strong>：<code>$listeners</code> 合并到
+        <code>$attrs</code>，<code>v-model</code> 默认使用
+        <code>modelValue</code>，<code>key</code> 不再支持
+        <code>v-if</code> 分支等。
+      </li>
+      <li>
+        <strong>全局 API 更改</strong>：<code>Vue.prototype</code> →
+        <code>app.config.globalProperties</code>，<code>Vue.component</code> →
+        <code>app.component</code>。
+      </li>
+      <li><strong>过滤器 filters</strong> 已被移除，改用计算属性或方法。</li>
+      <li>
+        <strong>事件总线</strong>：推荐使用 mitt 或 Pinia 替代
+        <code>$on/$emit</code>。
+      </li>
     </ul>
-    <p>官方提供了 <strong>Migration Build</strong>（兼容构建版本），可以让你在 Vue 3 项目中运行大部分 Vue 2 代码，逐步替换。</p>
+    <p>
+      官方提供了 <strong>Migration Build</strong>（兼容构建版本），可以让你在
+      Vue 3 项目中运行大部分 Vue 2 代码，逐步替换。
+    </p>
 
     <div class="warning">
-        <strong>⚠️ 注意：</strong>不建议直接在同一个项目中混合使用 Options API 和 Composition API，保持风格一致更利于维护。迁移时可先用 Options API 过渡，再逐步重构。
+      <strong>⚠️ 注意：</strong>不建议直接在同一个项目中混合使用 Options API 和
+      Composition API，保持风格一致更利于维护。迁移时可先用 Options API
+      过渡，再逐步重构。
     </div>
 
     <h2>7. 状态管理：Vuex vs Pinia</h2>
     <p>Vue 2 时代的标准方案是 Vuex，Vue 3 官方推荐使用 Pinia：</p>
     <table>
-        <thead>
-            <tr>
-                <th>特性</th>
-                <th>Vuex 4 (Vue 3)</th>
-                <th>Pinia</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>TypeScript 支持</td><td>一般</td><td>优秀，类型推断完整</td></tr>
-            <tr><td>DevTools</td><td>支持</td><td>支持，体验更好</td></tr>
-            <tr><td>模块化</td><td>嵌套 modules</td><td>扁平 store，天然模块化</td></tr>
-            <tr><td>Mutation</td><td>必需</td><td>无 mutation，直接修改 state</td></tr>
-            <tr><td>体积</td><td>较大</td><td>约 1KB</td></tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>特性</th>
+          <th>Vuex 4 (Vue 3)</th>
+          <th>Pinia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>TypeScript 支持</td>
+          <td>一般</td>
+          <td>优秀，类型推断完整</td>
+        </tr>
+        <tr>
+          <td>DevTools</td>
+          <td>支持</td>
+          <td>支持，体验更好</td>
+        </tr>
+        <tr>
+          <td>模块化</td>
+          <td>嵌套 modules</td>
+          <td>扁平 store，天然模块化</td>
+        </tr>
+        <tr>
+          <td>Mutation</td>
+          <td>必需</td>
+          <td>无 mutation，直接修改 state</td>
+        </tr>
+        <tr>
+          <td>体积</td>
+          <td>较大</td>
+          <td>约 1KB</td>
+        </tr>
+      </tbody>
     </table>
     <pre><code>// Pinia 示例
 import { defineStore } from 'pinia'
@@ -309,53 +481,69 @@ export const useCounterStore = defineStore('counter', {
     <h2>8. 路由：Vue Router 3 vs 4</h2>
     <p>Vue 2 对应 Vue Router 3，Vue 3 对应 Vue Router 4。主要变化：</p>
     <ul>
-        <li>创建方式：<code>new VueRouter()</code> → <code>createRouter()</code></li>
-        <li>历史模式：<code>mode: 'history'</code> → <code>history: createWebHistory()</code></li>
-        <li>导航守卫：<code>next()</code> 参数变化，推荐返回 <code>false</code> 或路由地址。</li>
+      <li>
+        创建方式：<code>new VueRouter()</code> → <code>createRouter()</code>
+      </li>
+      <li>
+        历史模式：<code>mode: 'history'</code> →
+        <code>history: createWebHistory()</code>
+      </li>
+      <li>
+        导航守卫：<code>next()</code> 参数变化，推荐返回
+        <code>false</code> 或路由地址。
+      </li>
     </ul>
 
     <h2>9. 生产构建与部署</h2>
     <p>Vue 2 和 Vue 3 的构建命令相同：</p>
     <pre><code>npm run build</code></pre>
-    <p>输出目录默认为 <code>dist</code>，可直接部署到 Nginx、Vercel、Netlify 等静态服务器。对于 SPA 路由，记得配置 fallback 规则：</p>
+    <p>
+      输出目录默认为 <code>dist</code>，可直接部署到 Nginx、Vercel、Netlify
+      等静态服务器。对于 SPA 路由，记得配置 fallback 规则：
+    </p>
     <pre><code># Nginx 配置
 location / {
     try_files $uri $uri/ /index.html;
 }</code></pre>
 
     <blockquote>
-        “Vue 3 不仅仅是性能的提升，更是开发体验的一次革命。Composition API 让逻辑复用变得前所未有的优雅。” —— Evan You
+      “Vue 3 不仅仅是性能的提升，更是开发体验的一次革命。Composition API
+      让逻辑复用变得前所未有的优雅。” —— Evan You
     </blockquote>
 
     <h2>10. 总结</h2>
-    <p>无论你选择 Vue 2 还是 Vue 3，Vue 的核心思想——声明式渲染、组件化、渐进式框架——始终不变。对于新项目，毫不犹豫地选择 Vue 3 + Vite + Pinia 组合；对于旧项目，可以利用 Migration Build 平稳过渡。掌握两个版本的异同，将使你在不同项目中游刃有余。</p>
+    <p>
+      无论你选择 Vue 2 还是 Vue 3，Vue
+      的核心思想——声明式渲染、组件化、渐进式框架——始终不变。对于新项目，毫不犹豫地选择
+      Vue 3 + Vite + Pinia 组合；对于旧项目，可以利用 Migration Build
+      平稳过渡。掌握两个版本的异同，将使你在不同项目中游刃有余。
+    </p>
 
     <table>
-        <thead>
-            <tr>
-                <th>场景</th>
-                <th>推荐技术栈</th>
-                <th>备注</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>全新项目</td>
-                <td>Vue 3 + Vite + Pinia + Vue Router 4</td>
-                <td>官方推荐，性能最佳</td>
-            </tr>
-            <tr>
-                <td>维护 Vue 2 项目</td>
-                <td>Vue 2 + Vue CLI + Vuex 3</td>
-                <td>稳定，但需规划迁移</td>
-            </tr>
-            <tr>
-                <td>迁移过渡期</td>
-                <td>Vue 3 + Migration Build</td>
-                <td>兼容 Vue 2 代码，逐步重构</td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>场景</th>
+          <th>推荐技术栈</th>
+          <th>备注</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>全新项目</td>
+          <td>Vue 3 + Vite + Pinia + Vue Router 4</td>
+          <td>官方推荐，性能最佳</td>
+        </tr>
+        <tr>
+          <td>维护 Vue 2 项目</td>
+          <td>Vue 2 + Vue CLI + Vuex 3</td>
+          <td>稳定，但需规划迁移</td>
+        </tr>
+        <tr>
+          <td>迁移过渡期</td>
+          <td>Vue 3 + Migration Build</td>
+          <td>兼容 Vue 2 代码，逐步重构</td>
+        </tr>
+      </tbody>
     </table>
-
-</body>
+  </body>
 </html>

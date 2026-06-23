@@ -5,16 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Node.js 环境变量配置与 .env 最佳实践</title>
     <style>
+      /* ========== 全局基础样式 ========== */
       body {
         background: #0a0e1a;
         color: #c8d6ff;
-        font-family: "Segoe UI", sans-serif;
-        padding: 30px 40px;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: clamp(16px, 4vw, 40px); /* 窄屏缩小边距 */
         line-height: 1.8;
-        max-width: 800px;
+        max-width: 860px; /* 略宽一点，适应更大屏幕 */
         margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
-      /* 隐藏滚动条但允许滚动 */
+
+      /* ========== 隐藏滚动条（必须保留） ========== */
       html {
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* IE/Edge 旧版 */
@@ -22,10 +30,8 @@
       html::-webkit-scrollbar {
         display: none; /* Chrome/Safari/Edge 新版 */
       }
-      body {
-        overflow-y: auto; /* 允许垂直滚动 */
-        overflow-x: hidden; /* 隐藏水平滚动 */
-      }
+
+      /* ========== 标题区（日期自动显示在右侧） ========== */
       h1 {
         color: #7aa9ff;
         border-bottom: 1px solid rgba(140, 180, 255, 0.2);
@@ -34,6 +40,8 @@
         justify-content: space-between;
         align-items: baseline;
         flex-wrap: wrap;
+        gap: 10px;
+        font-size: clamp(1.3rem, 5vw, 2rem); /* 标题自适应 */
       }
       h1 .pub-date {
         font-size: 0.55em;
@@ -41,28 +49,169 @@
         opacity: 0.5;
         white-space: nowrap;
       }
+
+      /* ========== 二级标题 ========== */
       h2 {
         color: #8ab4ff;
         margin-top: 30px;
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
       }
+      h3 {
+        color: #9bc0ff;
+        margin-top: 20px;
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+      }
+
+      /* ========== 段落与文本 ========== */
+      p {
+        font-size: clamp(0.95rem, 3vw, 1.05rem);
+      }
+
+      /* ========== 代码样式 ========== */
       code {
         background: rgba(140, 180, 255, 0.1);
         padding: 2px 8px;
         border-radius: 4px;
+        font-size: 0.85em;
+        word-break: break-word; /* 防止长代码溢出 */
       }
       pre {
         background: rgba(10, 14, 30, 0.6);
         border: 1px solid rgba(140, 180, 255, 0.1);
         border-radius: 10px;
         padding: 16px;
-        overflow-x: auto;
+        overflow-x: auto; /* 窄屏可横向滚动 */
+        font-size: 0.82em;
+        -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+      }
+
+      /* ========== 列表 ========== */
+      ul,
+      ol {
+        padding-left: 20px;
+      }
+      li {
+        margin: 6px 0;
+      }
+
+      /* ========== 引用块 / 提示框 ========== */
+      blockquote {
+        border-left: 3px solid rgba(140, 180, 255, 0.3);
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(140, 180, 255, 0.04);
+        color: rgba(200, 214, 255, 0.75);
+      }
+      .note,
+      .warning,
+      .tip {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+        font-size: clamp(0.88rem, 2.8vw, 1rem);
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.08);
+        border-left: 3px solid #ffcc66;
+      }
+      .warning {
+        background: rgba(255, 100, 100, 0.08);
+        border-left: 3px solid #ff6464;
       }
       .tip {
         background: rgba(100, 255, 150, 0.08);
         border-left: 3px solid #64ff96;
-        padding: 12px 16px;
-        border-radius: 6px;
+      }
+
+      /* ========== 链接 ========== */
+      a {
+        color: #8ab4ff;
+        word-break: break-all; /* 长链接换行 */
+      }
+      a:hover {
+        color: #aaccff;
+      }
+
+      /* ========== 表格（窄屏可横向滚动） ========== */
+      .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         margin: 20px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 360px; /* 保证窄屏时出现滚动条 */
+      }
+      th,
+      td {
+        border: 1px solid rgba(140, 180, 255, 0.15);
+        padding: 10px 14px;
+        text-align: left;
+        font-size: clamp(0.83rem, 2.5vw, 0.94rem);
+      }
+      th {
+        background: rgba(140, 180, 255, 0.08);
+        color: #8ab4ff;
+      }
+
+      /* ========== 图片 ========== */
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+
+      /* ========== 响应式适配（细调） ========== */
+      @media (max-width: 800px) {
+        body {
+          padding: 20px 16px;
+        }
+        h1 {
+          flex-direction: column; /* 标题与日期上下排列 */
+          align-items: flex-start;
+        }
+        h1 .pub-date {
+          font-size: 0.48em;
+        }
+        pre {
+          padding: 14px;
+          font-size: 0.76em;
+        }
+        .note,
+        .warning,
+        .tip {
+          padding: 11px 13px;
+        }
+        th,
+        td {
+          padding: 9px 11px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        body {
+          padding: 14px 10px;
+        }
+        h2 {
+          margin-top: 26px;
+        }
+        h3 {
+          margin-top: 18px;
+        }
+        pre {
+          padding: 10px;
+          font-size: 0.7em;
+        }
+        table {
+          min-width: 280px;
+        }
+        th,
+        td {
+          padding: 7px 8px;
+          font-size: 0.77rem;
+        }
       }
     </style>
   </head>

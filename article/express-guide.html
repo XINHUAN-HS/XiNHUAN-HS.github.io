@@ -1,141 +1,239 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Express.js 从入门到部署：全栈后端开发指南</title>
     <style>
-        /* ========== 全局基础样式 ========== */
-        body {
-            background: #0a0e1a;
-            color: #c8d6ff;
-            font-family: 'Segoe UI', sans-serif;
-            padding: 30px 40px;
-            line-height: 1.8;
-            max-width: 820px;
-            margin: 0 auto;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-        html {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        html::-webkit-scrollbar {
-            display: none;
-        }
+      /* ========== 全局基础样式 ========== */
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: clamp(16px, 4vw, 40px); /* 窄屏缩小边距 */
+        line-height: 1.8;
+        max-width: 860px; /* 略宽一点，适应更大屏幕 */
+        margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
 
-        /* ========== 标题区 ========== */
-        h1 { 
-            color: #7aa9ff; 
-            border-bottom: 1px solid rgba(140,180,255,0.2); 
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 10px;
+      /* ========== 隐藏滚动条（必须保留） ========== */
+      html {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge 旧版 */
+      }
+      html::-webkit-scrollbar {
+        display: none; /* Chrome/Safari/Edge 新版 */
+      }
+
+      /* ========== 标题区（日期自动显示在右侧） ========== */
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: clamp(1.3rem, 5vw, 2rem); /* 标题自适应 */
+      }
+      h1 .pub-date {
+        font-size: 0.55em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+
+      /* ========== 二级标题 ========== */
+      h2 {
+        color: #8ab4ff;
+        margin-top: 30px;
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
+      }
+      h3 {
+        color: #9bc0ff;
+        margin-top: 20px;
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+      }
+
+      /* ========== 段落与文本 ========== */
+      p {
+        font-size: clamp(0.95rem, 3vw, 1.05rem);
+      }
+
+      /* ========== 代码样式 ========== */
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        word-break: break-word; /* 防止长代码溢出 */
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.6);
+        border: 1px solid rgba(140, 180, 255, 0.1);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto; /* 窄屏可横向滚动 */
+        font-size: 0.82em;
+        -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+      }
+
+      /* ========== 列表 ========== */
+      ul,
+      ol {
+        padding-left: 20px;
+      }
+      li {
+        margin: 6px 0;
+      }
+
+      /* ========== 引用块 / 提示框 ========== */
+      blockquote {
+        border-left: 3px solid rgba(140, 180, 255, 0.3);
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(140, 180, 255, 0.04);
+        color: rgba(200, 214, 255, 0.75);
+      }
+      .note,
+      .warning,
+      .tip {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+        font-size: clamp(0.88rem, 2.8vw, 1rem);
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.08);
+        border-left: 3px solid #ffcc66;
+      }
+      .warning {
+        background: rgba(255, 100, 100, 0.08);
+        border-left: 3px solid #ff6464;
+      }
+      .tip {
+        background: rgba(100, 255, 150, 0.08);
+        border-left: 3px solid #64ff96;
+      }
+
+      /* ========== 链接 ========== */
+      a {
+        color: #8ab4ff;
+        word-break: break-all; /* 长链接换行 */
+      }
+      a:hover {
+        color: #aaccff;
+      }
+
+      /* ========== 表格（窄屏可横向滚动） ========== */
+      .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 20px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 360px; /* 保证窄屏时出现滚动条 */
+      }
+      th,
+      td {
+        border: 1px solid rgba(140, 180, 255, 0.15);
+        padding: 10px 14px;
+        text-align: left;
+        font-size: clamp(0.83rem, 2.5vw, 0.94rem);
+      }
+      th {
+        background: rgba(140, 180, 255, 0.08);
+        color: #8ab4ff;
+      }
+
+      /* ========== 图片 ========== */
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+
+      /* ========== 响应式适配（细调） ========== */
+      @media (max-width: 800px) {
+        body {
+          padding: 20px 16px;
+        }
+        h1 {
+          flex-direction: column; /* 标题与日期上下排列 */
+          align-items: flex-start;
         }
         h1 .pub-date {
-            font-size: 0.55em;
-            font-weight: normal;
-            opacity: 0.5;
-            white-space: nowrap;
+          font-size: 0.48em;
         }
-
-        /* ========== 二级标题 ========== */
-        h2 { color: #8ab4ff; margin-top: 30px; }
-        h3 { color: #9bc0ff; margin-top: 20px; }
-
-        /* ========== 代码样式 ========== */
-        code { 
-            background: rgba(140,180,255,0.1); 
-            padding: 2px 8px; 
-            border-radius: 4px; 
-            font-size: 0.9em; 
+        pre {
+          padding: 14px;
+          font-size: 0.76em;
         }
-        pre { 
-            background: rgba(10,14,30,0.6); 
-            border: 1px solid rgba(140,180,255,0.1); 
-            border-radius: 10px; 
-            padding: 16px; 
-            overflow-x: auto; 
-            font-size: 0.9em;
-        }
-
-        /* ========== 列表 ========== */
-        ul, ol { padding-left: 20px; }
-        li { margin: 6px 0; }
-
-        /* ========== 引用块 / 提示框 ========== */
-        blockquote {
-            border-left: 3px solid rgba(140,180,255,0.3);
-            margin: 20px 0;
-            padding: 10px 20px;
-            background: rgba(140,180,255,0.04);
-            color: rgba(200,214,255,0.75);
-        }
-        .note {
-            background: rgba(255,204,102,0.08);
-            border-left: 3px solid #ffcc66;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin: 20px 0;
-        }
-        .warning {
-            background: rgba(255,100,100,0.08);
-            border-left: 3px solid #ff6464;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin: 20px 0;
-        }
+        .note,
+        .warning,
         .tip {
-            background: rgba(100,255,150,0.08);
-            border-left: 3px solid #64ff96;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin: 20px 0;
+          padding: 11px 13px;
         }
+        th,
+        td {
+          padding: 9px 11px;
+        }
+      }
 
-        /* ========== 链接 ========== */
-        a { color: #8ab4ff; }
-        a:hover { color: #aaccff; }
-
-        /* ========== 表格 ========== */
+      @media (max-width: 520px) {
+        body {
+          padding: 14px 10px;
+        }
+        h2 {
+          margin-top: 26px;
+        }
+        h3 {
+          margin-top: 18px;
+        }
+        pre {
+          padding: 10px;
+          font-size: 0.7em;
+        }
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
+          min-width: 280px;
         }
-        th, td {
-            border: 1px solid rgba(140,180,255,0.15);
-            padding: 10px 14px;
-            text-align: left;
+        th,
+        td {
+          padding: 7px 8px;
+          font-size: 0.77rem;
         }
-        th {
-            background: rgba(140,180,255,0.08);
-            color: #8ab4ff;
-        }
-
-        /* ========== 响应式 ========== */
-        @media (max-width: 640px) {
-            body { padding: 20px 16px; }
-            h1 { font-size: 1.4em; }
-            h1 .pub-date { font-size: 0.5em; }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <h1>
-        <span>🚀 Express.js 从入门到部署：全栈后端开发指南</span>
-        <span class="pub-date">— 2026-06-23</span>
+      <span>🚀 Express.js 从入门到部署：全栈后端开发指南</span>
+      <span class="pub-date">— 2026-06-23</span>
     </h1>
 
-    <p>Express.js 是 Node.js 生态中最流行、最轻量的 Web 框架之一。它提供了简洁的路由系统、强大的中间件机制，以及丰富的生态系统。无论你是构建 RESTful API 还是服务端渲染应用，Express 都是绝佳的选择。本文将从项目初始化开始，逐步带你掌握 Express 的核心用法，并最终实现生产级部署。</p>
+    <p>
+      Express.js 是 Node.js 生态中最流行、最轻量的 Web
+      框架之一。它提供了简洁的路由系统、强大的中间件机制，以及丰富的生态系统。无论你是构建
+      RESTful API 还是服务端渲染应用，Express
+      都是绝佳的选择。本文将从项目初始化开始，逐步带你掌握 Express
+      的核心用法，并最终实现生产级部署。
+    </p>
 
     <h2>1. 环境准备与项目初始化</h2>
-    <p>首先确保已安装 Node.js（推荐 v18 LTS 或更高版本）。然后创建一个新目录并初始化项目：</p>
+    <p>
+      首先确保已安装 Node.js（推荐 v18 LTS
+      或更高版本）。然后创建一个新目录并初始化项目：
+    </p>
     <pre><code>mkdir my-express-app
 cd my-express-app
 npm init -y</code></pre>
@@ -153,15 +251,21 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });</code></pre>
-    <p>运行 <code>node index.js</code>，访问 <code>http://localhost:3000</code> 即可看到效果。</p>
+    <p>
+      运行 <code>node index.js</code>，访问
+      <code>http://localhost:3000</code> 即可看到效果。
+    </p>
 
     <div class="tip">
-        <strong>✅ 推荐：</strong>使用 <code>nodemon</code> 实现自动重启。<br>
-        <code>npm install --save-dev nodemon</code>，然后在 package.json 中添加脚本：<code>"dev": "nodemon index.js"</code>
+      <strong>✅ 推荐：</strong>使用 <code>nodemon</code> 实现自动重启。<br />
+      <code>npm install --save-dev nodemon</code>，然后在 package.json
+      中添加脚本：<code>"dev": "nodemon index.js"</code>
     </div>
 
     <h2>2. 路由与请求处理</h2>
-    <p>Express 的路由系统非常直观。你可以针对不同的 HTTP 方法和路径定义处理函数：</p>
+    <p>
+      Express 的路由系统非常直观。你可以针对不同的 HTTP 方法和路径定义处理函数：
+    </p>
     <pre><code>// GET 请求
 app.get('/users', (req, res) => {
   res.json([{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }]);
@@ -194,7 +298,10 @@ const usersRouter = require('./routes/users');
 app.use('/users', usersRouter);</code></pre>
 
     <h2>3. 中间件：Express 的灵魂</h2>
-    <p>中间件是 Express 的核心概念，它是在请求到达路由处理函数之前执行的函数。你可以用它来解析请求体、记录日志、验证身份等。</p>
+    <p>
+      中间件是 Express
+      的核心概念，它是在请求到达路由处理函数之前执行的函数。你可以用它来解析请求体、记录日志、验证身份等。
+    </p>
     <pre><code>// 内置中间件：解析 JSON 请求体
 app.use(express.json());
 
@@ -209,11 +316,17 @@ const cors = require('cors');
 app.use(cors());</code></pre>
 
     <div class="note">
-        <strong>💡 中间件执行顺序：</strong>按注册顺序依次执行。如果某个中间件未调用 <code>next()</code>，则请求会被挂起。通常将通用中间件放在最前面，路由中间件放在后面。
+      <strong>💡 中间件执行顺序：</strong
+      >按注册顺序依次执行。如果某个中间件未调用
+      <code>next()</code
+      >，则请求会被挂起。通常将通用中间件放在最前面，路由中间件放在后面。
     </div>
 
     <h2>4. 错误处理</h2>
-    <p>Express 提供了专门的错误处理中间件，它有四个参数 <code>(err, req, res, next)</code>：</p>
+    <p>
+      Express 提供了专门的错误处理中间件，它有四个参数
+      <code>(err, req, res, next)</code>：
+    </p>
     <pre><code>// 必须在所有路由之后注册
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -251,7 +364,9 @@ app.get('/users', async (req, res) => {
 });</code></pre>
 
     <h2>6. 测试与调试</h2>
-    <p>推荐使用 <strong>Jest</strong> + <strong>Supertest</strong> 进行接口测试：</p>
+    <p>
+      推荐使用 <strong>Jest</strong> + <strong>Supertest</strong> 进行接口测试：
+    </p>
     <pre><code>npm install --save-dev jest supertest</code></pre>
     <pre><code>// app.test.js
 const request = require('supertest');
@@ -269,7 +384,10 @@ describe('GET /', () => {
     <p>Express 应用可以部署到多种环境。以下是两种主流方式：</p>
 
     <h3>7.1 使用 PM2 进程管理</h3>
-    <p>PM2 是 Node.js 应用的生产级进程管理器，支持负载均衡、自动重启、日志管理等。</p>
+    <p>
+      PM2 是 Node.js
+      应用的生产级进程管理器，支持负载均衡、自动重启、日志管理等。
+    </p>
     <pre><code>npm install -g pm2
 
 # 启动应用（自动启用集群模式）
@@ -295,52 +413,59 @@ CMD ["node", "index.js"]</code></pre>
 docker run -d -p 3000:3000 my-express-app</code></pre>
 
     <div class="warning">
-        <strong>⚠️ 安全建议：</strong>在生产环境中务必设置 <code>NODE_ENV=production</code>，并使用 helmet、rate-limiter-flexible 等中间件增强安全性。不要使用 root 用户运行容器。
+      <strong>⚠️ 安全建议：</strong>在生产环境中务必设置
+      <code>NODE_ENV=production</code>，并使用 helmet、rate-limiter-flexible
+      等中间件增强安全性。不要使用 root 用户运行容器。
     </div>
 
     <h2>8. 总结</h2>
-    <p>Express.js 以其灵活性和极低的入门门槛，成为了 Node.js 后端开发的基石。从简单的 API 到复杂的企业级应用，Express 都能胜任。结合 PM2、Docker 等工具，你可以轻松地将应用部署到任何环境。</p>
-
-    <table>
+    <p>
+      Express.js 以其灵活性和极低的入门门槛，成为了 Node.js
+      后端开发的基石。从简单的 API 到复杂的企业级应用，Express 都能胜任。结合
+      PM2、Docker 等工具，你可以轻松地将应用部署到任何环境。
+    </p>
+    <div class="table-wrapper">
+      <table>
         <thead>
-            <tr>
-                <th>阶段</th>
-                <th>关键命令/操作</th>
-                <th>说明</th>
-            </tr>
+          <tr>
+            <th>阶段</th>
+            <th>关键命令/操作</th>
+            <th>说明</th>
+          </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>初始化</td>
-                <td><code>npm init -y && npm i express</code></td>
-                <td>创建项目并安装 Express</td>
-            </tr>
-            <tr>
-                <td>开发</td>
-                <td><code>nodemon index.js</code></td>
-                <td>自动重启的开发服务器</td>
-            </tr>
-            <tr>
-                <td>测试</td>
-                <td><code>jest</code> + <code>supertest</code></td>
-                <td>编写自动化接口测试</td>
-            </tr>
-            <tr>
-                <td>部署</td>
-                <td><code>pm2 start index.js -i max</code></td>
-                <td>使用 PM2 守护进程</td>
-            </tr>
-            <tr>
-                <td>容器化</td>
-                <td><code>docker build -t my-app .</code></td>
-                <td>构建 Docker 镜像</td>
-            </tr>
+          <tr>
+            <td>初始化</td>
+            <td><code>npm init -y && npm i express</code></td>
+            <td>创建项目并安装 Express</td>
+          </tr>
+          <tr>
+            <td>开发</td>
+            <td><code>nodemon index.js</code></td>
+            <td>自动重启的开发服务器</td>
+          </tr>
+          <tr>
+            <td>测试</td>
+            <td><code>jest</code> + <code>supertest</code></td>
+            <td>编写自动化接口测试</td>
+          </tr>
+          <tr>
+            <td>部署</td>
+            <td><code>pm2 start index.js -i max</code></td>
+            <td>使用 PM2 守护进程</td>
+          </tr>
+          <tr>
+            <td>容器化</td>
+            <td><code>docker build -t my-app .</code></td>
+            <td>构建 Docker 镜像</td>
+          </tr>
         </tbody>
-    </table>
-
+      </table>
+    </div>
     <blockquote>
-        “Express 的哲学是提供一个薄薄的抽象层，让你专注于业务逻辑，而不是框架本身。” —— TJ Holowaychuk（Express 创始人）
+      “Express
+      的哲学是提供一个薄薄的抽象层，让你专注于业务逻辑，而不是框架本身。” —— TJ
+      Holowaychuk（Express 创始人）
     </blockquote>
-
-</body>
+  </body>
 </html>

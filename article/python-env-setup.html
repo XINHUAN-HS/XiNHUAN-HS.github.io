@@ -8,23 +8,24 @@
       body {
         background: #0a0e1a;
         color: #c8d6ff;
-        font-family: "Segoe UI", sans-serif;
-        padding: 30px 40px;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: clamp(16px, 4vw, 40px);
         line-height: 1.8;
-        max-width: 800px;
+        max-width: 840px;
         margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
-      /* 隐藏滚动条但允许滚动 */
       html {
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE/Edge 旧版 */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
       }
       html::-webkit-scrollbar {
-        display: none; /* Chrome/Safari/Edge 新版 */
-      }
-      body {
-        overflow-y: auto; /* 允许垂直滚动 */
-        overflow-x: hidden; /* 隐藏水平滚动 */
+        display: none;
       }
       h1 {
         color: #7aa9ff;
@@ -34,6 +35,8 @@
         justify-content: space-between;
         align-items: baseline;
         flex-wrap: wrap;
+        gap: 10px;
+        font-size: clamp(1.3rem, 5vw, 2rem);
       }
       h1 .pub-date {
         font-size: 0.55em;
@@ -44,12 +47,22 @@
       h2 {
         color: #8ab4ff;
         margin-top: 30px;
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
+      }
+      h3 {
+        color: #9bc0ff;
+        margin-top: 20px;
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+      }
+      p {
+        font-size: clamp(0.93rem, 3vw, 1.03rem);
       }
       code {
         background: rgba(140, 180, 255, 0.1);
         padding: 2px 8px;
         border-radius: 4px;
-        font-size: 0.9em;
+        font-size: 0.87em;
+        word-break: break-word;
       }
       pre {
         background: rgba(10, 14, 30, 0.6);
@@ -57,19 +70,117 @@
         border-radius: 10px;
         padding: 16px;
         overflow-x: auto;
+        font-size: 0.84em;
+        -webkit-overflow-scrolling: touch;
       }
-      ul {
+      ul,
+      ol {
         padding-left: 20px;
       }
       li {
         margin: 6px 0;
       }
-      .note {
-        background: rgba(255, 204, 102, 0.08);
-        border-left: 3px solid #ffcc66;
+      .note,
+      .warning,
+      .tip {
         padding: 12px 16px;
         border-radius: 6px;
         margin: 20px 0;
+        font-size: clamp(0.86rem, 2.8vw, 0.98rem);
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.08);
+        border-left: 3px solid #ffcc66;
+      }
+      .warning {
+        background: rgba(255, 100, 100, 0.08);
+        border-left: 3px solid #ff6464;
+      }
+      .tip {
+        background: rgba(100, 255, 150, 0.08);
+        border-left: 3px solid #64ff96;
+      }
+      a {
+        color: #8ab4ff;
+        word-break: break-all;
+      }
+      a:hover {
+        color: #aaccff;
+      }
+      .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 20px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 340px;
+      }
+      th,
+      td {
+        border: 1px solid rgba(140, 180, 255, 0.15);
+        padding: 10px 14px;
+        text-align: left;
+        font-size: clamp(0.82rem, 2.5vw, 0.93rem);
+      }
+      th {
+        background: rgba(140, 180, 255, 0.08);
+        color: #8ab4ff;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      @media (max-width: 780px) {
+        body {
+          padding: 20px 16px;
+        }
+        h1 {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        h1 .pub-date {
+          font-size: 0.47em;
+        }
+        pre {
+          padding: 14px;
+          font-size: 0.74em;
+        }
+        .note,
+        .warning,
+        .tip {
+          padding: 11px 13px;
+        }
+        th,
+        td {
+          padding: 9px 11px;
+        }
+      }
+      @media (max-width: 540px) {
+        body {
+          padding: 14px 10px;
+        }
+        h2 {
+          margin-top: 26px;
+        }
+        h3 {
+          margin-top: 18px;
+        }
+        pre {
+          padding: 10px;
+          font-size: 0.68em;
+        }
+        table {
+          min-width: 260px;
+        }
+        th,
+        td {
+          padding: 7px 8px;
+          font-size: 0.76rem;
+        }
       }
     </style>
   </head>
@@ -148,15 +259,15 @@ print(os.getenv('DB_HOST'))</code></pre>
     <h2>5. 常见问题</h2>
     <ul>
       <li>
-        <strong>Q:</strong> 修改环境变量后为什么没生效？<br />
-        <strong>A:</strong> 需要重启终端或重新加载配置文件（<code
-          >source ~/.bashrc</code
-        >）。
+        <strong>Q:</strong> 修改环境变量后为什么没生效？<br /><strong
+          >A:</strong
+        >
+        需要重启终端或重新加载配置文件（<code>source ~/.bashrc</code>）。
       </li>
       <li>
         <strong>Q:</strong> <code>PYTHONPATH</code> 和
-        <code>sys.path</code> 的关系？<br />
-        <strong>A:</strong> <code>PYTHONPATH</code> 会自动添加到
+        <code>sys.path</code> 的关系？<br /><strong>A:</strong>
+        <code>PYTHONPATH</code> 会自动添加到
         <code>sys.path</code> 中，影响模块导入搜索路径。
       </li>
     </ul>
