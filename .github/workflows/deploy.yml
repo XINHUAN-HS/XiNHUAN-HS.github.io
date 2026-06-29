@@ -1,32 +1,52 @@
 name: 自动构建并部署
 
+# 触发条件：当向 main 分支推送代码，或者手动触发时运行
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
+# 必须赋予写入权限，否则 GITHUB_TOKEN 无法推送到 gh-pages
+permissions:
+  contents: write
+  pages: write      # 允许 Pages 部署
+  id-token: write
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
-    # 权限必须顶格写，前面不能有空格！
-    permissions:
-      contents: write 
-
     steps:
+      # 1. 检出仓库代码
       - name: 检出代码
         uses: actions/checkout@v4
 
+      # 2. 设置 Python 环境
       - name: 设置 Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: 生成索引
-        run: python create_article.py
+      # 3. 安装依赖并运行脚本
+      - name: 生成文章索引
+        run: |
+          python create_article.py
 
-      - name: 部署
-        uses: peaceiris/actions-gh-pages@v3
+      # 4. ✅ 检查 articles.json 是否已生成（调试用，失败则终止）
+      - name: 验证 articles.json 存在
+        run: |
+          if [ ! -f articles.json ]; then
+            echo "❌ articles.json 未生成！"
+            exit 1
+          fi
+          echo "✅ articles.json 已生成，大小：$(wc -c < articles.json) 字节"
+
+      # 5. 部署到 GitHub Pages（使用 v4，force_orphan 确保每次完全覆盖）
+      - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: ./
+          force_orphan: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
