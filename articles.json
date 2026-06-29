@@ -1,56 +1,62 @@
 [
   {
-    "title": "Express.js 从入门到部署：全栈后端开发指南",
-    "path": "article/express-guide.html",
-    "description": "从零开始学习 Express.js，涵盖项目初始化、路由设计、中间件、错误处理、数据库集成、测试以及 PM2/Docker 生产部署。",
-    "date": "2026-06-23"
+    "title": "🔖 文章模板-这里是主标题",
+    "path": "article/article-template.html",
+    "description": "文章模板-这里是文章的简要介绍或引言，可以写一两句话概括全文内容。",
+    "date": "2004-08-15"
   },
   {
-    "title": "Electron-Vite 从入门到打包：完整使用指南",
-    "path": "article/electron-vite-guide.html",
-    "description": "从零开始，学习如何使用 Electron-Vite 搭建、开发和打包 Electron 桌面应用，涵盖环境配置、项目结构、HMR 调试及 electron-builder 打包实战。",
-    "date": "2026-06-23"
-  },
-  {
-    "title": "C/C++ 环境配置完全指南",
+    "title": "⚙️ C/C++ 环境变量配置指南",
     "path": "article/c&cpp-env-setup.html",
-    "description": "详尽介绍 C/C++ 开发环境的搭建方法，包括编译器安装、IDE 配置、构建工具链以及跨平台开发注意事项。",
+    "description": "C/C++ 开发的第一步是正确配置编译器和构建工具的环境变量。本文涵盖\n      GCC、MinGW-w64 以及 Visual Studio 命令行工具的 PATH\n      设置，帮助你从终端直接调用编译器。",
+    "date": "2026-06-22"
+  },
+  {
+    "title": "⚡ Electron-Vite 从入门到打包：完整使用指南",
+    "path": "article/electron-vite-guide.html",
+    "description": "Electron-Vite 是一个新一代的 Electron 开发与构建工具，它结合了 Vite\n      的极速开发体验和 Electron\n      的桌面应用能力。本文将带你从零开始，完成项目搭建、开发调试、依赖管理，直至最终打包发布的全流程。",
     "date": "2026-06-23"
   },
- {
-    "title": "Vite 从入门到精通：下一代前端构建工具实战指南",
-    "path": "article/vite-guide.html",
-    "description": "全面讲解 Vite 的使用，涵盖项目创建、配置文件、HMR 开发、环境变量、生产构建、插件系统及 Nginx/Vercel 部署等核心内容。",
-    "date": "2026-06-21"
+  {
+    "title": "🚀 Express.js 从入门到部署：全栈后端开发指南",
+    "path": "article/express-guide.html",
+    "description": "Express.js 是 Node.js 生态中最流行、最轻量的 Web\n      框架之一。它提供了简洁的路由系统、强大的中间件机制，以及丰富的生态系统。无论你是构建\n      RESTful API 还是服务端渲染应用，Express\n      都是绝佳的选择。本文将从项目初始化开始，逐步带你掌握 Express\n      的核心用法，并最终实现生产级部署。",
+    "date": "2026-06-23"
   },
   {
-    "title": "Vue 2 & Vue 3 完整指南：从入门到项目实战",
-    "path": "article/vue-guide.html",
-    "description": "系统对比 Vue 2 与 Vue 3，涵盖 Options API、Composition API、生命周期、状态管理（Vuex vs Pinia）、路由迁移及项目实战，助你快速上手并平滑迁移。",
-    "date": "2026-06-21"
-  },
-  {
-    "title": "Python 环境变量配置指南",
-    "path": "article/python-env-setup.html",
-    "description": "详细介绍 Python 中环境变量的概念、设置方法、读取方式以及 .env 文件的最佳实践。",
-    "date": "2026-06-20"
-  },
-  {
-    "title": "Java 环境变量配置详解（JDK & Maven）",
+    "title": "☕ Java 环境变量配置详解",
     "path": "article/java-env-setup.html",
-    "description": "手把手教你配置 JAVA_HOME、PATH 和 MAVEN_HOME，并介绍多版本 JDK 管理工具。",
+    "description": "Java 开发离不开正确的环境变量配置。本文将带你一步步配置\n      JAVA_HOME、PATH 和 MAVEN_HOME。",
     "date": "2026-06-18"
   },
   {
-    "title": "Node.js 环境变量配置与 .env 最佳实践",
+    "title": "🟢 Node.js 环境变量配置与 .env 最佳实践",
     "path": "article/node-env-setup.html",
-    "description": "学习如何在 Node.js 中设置和使用环境变量，以及利用 dotenv 和 cross-env 实现优雅的配置管理。",
+    "description": "Node.js 通过\n      process.env\n      访问环境变量。合理使用环境变量可以让你的应用更安全、更灵活。",
     "date": "2026-06-15"
   },
   {
-    "title": "文章模板",
-    "path": "article/article-template.html",
-    "description": "本网页,文章撰写模板",
-    "date": "2004-08-15"
+    "title": "🕷️ Node.js 爬虫脚本实战指南 — 从入门到部署",
+    "path": "article/nodejs-spider-guide.html",
+    "description": "网络爬虫是自动化获取互联网数据的利器。在 Node.js 生态中，凭借其非阻塞 I/O\n      和丰富的包管理工具，编写高效爬虫变得异常简单。本文将从环境准备讲起，逐步带你实现一个支持\n      静态页面抓取、动态渲染爬取、反爬绕过以及\n      数据持久化的完整爬虫脚本，并分享生产环境的部署与监控经验。",
+    "date": "2026-06-27"
+  },
+  {
+    "title": "🐍 Python 环境变量配置指南",
+    "path": "article/python-env-setup.html",
+    "description": "环境变量是操作系统级别的变量，用于影响程序的行为。对于 Python\n      开发者来说，正确配置环境变量可以简化开发流程，避免硬编码敏感信息。",
+    "date": "2026-06-20"
+  },
+  {
+    "title": "⚡ Vite 从入门到精通：下一代前端构建工具实战指南",
+    "path": "article/vite-guide.html",
+    "description": "Vite（法语意为“快速”）是由 Vue\n      作者尤雨溪开发的新一代前端构建工具。它利用浏览器原生 ES Module\n      导入特性，实现了开发服务器的秒级冷启动和即时热更新。无论是 Vue、React 还是\n      Svelte 项目，Vite 都能显著提升开发效率。本文将从创建项目开始，带你全面掌握\n      Vite 的配置、插件、环境变量、生产构建及高级优化技巧。",
+    "date": "2026-06-21"
+  },
+  {
+    "title": "🟢 Vue 2 & Vue 3 完整指南：从入门到项目实战",
+    "path": "article/vue-guide.html",
+    "description": "Vue.js 是目前最受欢迎的前端框架之一，广泛应用于单页应用和企业级项目。Vue 2\n      奠定了生态基础，而 Vue 3 带来了 Composition API、TypeScript\n      深度集成、性能大幅提升等重大改进。本文将对两个版本进行系统梳理，帮助开发者理解差异、平滑迁移，并掌握实际项目中的核心技能。",
+    "date": "2026-06-21"
   }
 ]
