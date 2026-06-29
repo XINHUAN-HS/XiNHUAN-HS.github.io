@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rust 语言入门完全指南 · 从零开始</title>
+    <style>
+      /* ========== 全局基础样式 ========== */
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: clamp(16px, 4vw, 40px);
+        line-height: 1.8;
+        max-width: 920px;
+        margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      /* ========== 隐藏滚动条（必须保留） ========== */
+      html {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      html::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ========== 标题区 ========== */
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: clamp(1.3rem, 5vw, 2rem);
+      }
+      h1 .pub-date {
+        font-size: 0.45em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+
+      h2 {
+        color: #8ab4ff;
+        margin-top: 36px;
+        font-size: clamp(1.15rem, 4vw, 1.5rem);
+        border-left: 3px solid #4a7fd4;
+        padding-left: 12px;
+      }
+      h3 {
+        color: #9bc0ff;
+        margin-top: 24px;
+        font-size: clamp(1rem, 3.5vw, 1.22rem);
+      }
+
+      p {
+        font-size: clamp(0.93rem, 3vw, 1.03rem);
+      }
+
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.86em;
+        word-break: break-word;
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.65);
+        border: 1px solid rgba(140, 180, 255, 0.12);
+        border-radius: 10px;
+        padding: 16px 18px;
+        overflow-x: auto;
+        font-size: 0.84em;
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+      }
+      pre::before {
+        content: "🦀";
+        position: absolute;
+        top: 8px;
+        right: 14px;
+        font-size: 1.2rem;
+        opacity: 0.35;
+      }
+
+      ul,
+      ol {
+        padding-left: 22px;
+      }
+      li {
+        margin: 5px 0;
+      }
+
+      blockquote {
+        border-left: 3px solid rgba(140, 180, 255, 0.28);
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(140, 180, 255, 0.035);
+        color: rgba(200, 214, 255, 0.72);
+      }
+
+      .note,
+      .warning,
+      .tip {
+        padding: 12px 17px;
+        border-radius: 6px;
+        margin: 22px 0;
+        font-size: clamp(0.87rem, 2.8vw, 0.98rem);
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.07);
+        border-left: 3px solid #ffcc66;
+      }
+      .warning {
+        background: rgba(255, 80, 90, 0.065);
+        border-left: 3px solid #ff505a;
+      }
+      .tip {
+        background: rgba(60, 230, 130, 0.075);
+        border-left: 3px solid #3ce682;
+      }
+
+      a {
+        color: #8ab4ff;
+        word-break: break-all;
+      }
+      a:hover {
+        color: #aaccff;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 20px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 380px;
+      }
+      th,
+      td {
+        border: 1px solid rgba(140, 180, 255, 0.13);
+        padding: 10px 14px;
+        text-align: left;
+        font-size: clamp(0.81rem, 2.5vw, 0.92rem);
+      }
+      th {
+        background: rgba(70, 120, 210, 0.12);
+        color: #8ab4ff;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+
+      .toc {
+        background: rgba(50, 80, 160, 0.06);
+        border: 1px solid rgba(140, 180, 255, 0.09);
+        border-radius: 12px;
+        padding: 16px 22px;
+        margin: 32px 0 38px;
+      }
+      .toc summary {
+        cursor: pointer;
+        font-weight: 600;
+        color: #7aa9ff;
+        font-size: 1.02rem;
+      }
+      .toc ol {
+        margin-top: 12px;
+        margin-bottom: 4px;
+      }
+      .toc a {
+        text-decoration: none;
+      }
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      .output-label {
+        display: inline-block;
+        background: rgba(110, 170, 250, 0.1);
+        color: #7aa9ff;
+        font-size: 0.74rem;
+        padding: 0 10px;
+        border-radius: 12px;
+        letter-spacing: 0.3px;
+        margin-right: 6px;
+      }
+
+      @media (max-width: 780px) {
+        body {
+          padding: 20px 14px;
+        }
+        h1 {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        h1 .pub-date {
+          font-size: 0.42em;
+        }
+        pre {
+          padding: 14px;
+          font-size: 0.78em;
+        }
+        .note,
+        .warning,
+        .tip {
+          padding: 11px 13px;
+        }
+        th,
+        td {
+          padding: 9px 11px;
+        }
+      }
+
+      @media (max-width: 500px) {
+        body {
+          padding: 12px 8px;
+        }
+        h2 {
+          margin-top: 28px;
+        }
+        pre {
+          padding: 10px;
+          font-size: 0.71em;
+        }
+        table {
+          min-width: 260px;
+        }
+        th,
+        td {
+          padding: 6px 7px;
+          font-size: 0.73rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== 标题 + 日期 ===== -->
+    <h1>
+      <span>🦀 Rust 语言入门完全指南 · 从零开始</span>
+      <span class="pub-date">— 2026-06-29</span>
+    </h1>
+
+    <!-- ===== 导语 ===== -->
+    <p>
+      本文是一套面向初学者的 Rust 教程，<strong>每个知识点都附带可直接运行的示例</strong>。你只需安装 Rust 工具链，就能跟着代码一步步上手。无论你是刚接触系统编程，还是想了解 Rust 的安全哲学，这份指南都能帮你快速建立完整认知。
+    </p>
+
+    <!-- ===== 目录 ===== -->
+    <details class="toc" open>
+      <summary>📑 目录（点击折叠/展开）</summary>
+      <ol>
+        <li><a href="#ch1">环境准备与第一个程序</a></li>
+        <li><a href="#ch2">变量、可变性与常量</a></li>
+        <li><a href="#ch3">基础数据类型</a></li>
+        <li><a href="#ch4">函数与控制流</a></li>
+        <li><a href="#ch5">所有权与借用</a></li>
+        <li><a href="#ch6">切片类型</a></li>
+        <li><a href="#ch7">结构体与方法</a></li>
+        <li><a href="#ch8">枚举与模式匹配</a></li>
+        <li><a href="#ch9">错误处理</a></li>
+        <li><a href="#ch10">泛型与 trait</a></li>
+        <li><a href="#ch11">常用集合</a></li>
+        <li><a href="#ch12">生命周期入门</a></li>
+        <li><a href="#ch13">闭包与迭代器</a></li>
+        <li><a href="#ch14">模块系统</a></li>
+        <li><a href="#ch15">并发基础</a></li>
+      </ol>
+    </details>
+
+    <!-- ============================================================ -->
+    <!-- 第一章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch1">1. 环境准备与第一个程序</h2>
+    <p>
+      访问 <a href="https://rustup.rs" target="_blank">rustup.rs</a> 安装 Rust 工具链（包含 <code>rustc</code>、<code>cargo</code>）。验证安装：
+    </p>
+    <pre><code>$ rustc --version
+rustc 1.80.0 (051478957 2025-07-21)
+$ cargo --version
+cargo 1.80.0 (376030c3e 2025-07-19)</code></pre>
+
+    <p>创建第一个项目：</p>
+    <pre><code>$ cargo new hello_rust
+$ cd hello_rust
+$ cargo run</code></pre>
+
+    <p><code>src/main.rs</code> 内容如下：</p>
+    <pre><code>fn main() {
+    println!("🦀 Hello, Rust!");
+}</code></pre>
+
+    <div class="note">
+      <strong>💡 提示：</strong><code>println!</code> 是宏（macro），以叹号结尾。Rust 中宏与函数不同，但用法类似。
+    </div>
+
+    <p>运行输出：</p>
+    <pre><code><span class="output-label">输出</span> 🦀 Hello, Rust!</pre>
+
+    <!-- ============================================================ -->
+    <!-- 第二章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch2">2. 变量、可变性与常量</h2>
+    <p>Rust 中变量默认不可变（immutable），用 <code>mut</code> 关键字使其可变。常量用 <code>const</code> 声明，且必须标注类型。</p>
+
+    <pre><code>fn main() {
+    // 不可变变量
+    let x = 5;
+    // x = 6; // ❌ 编译错误：不能对不可变变量二次赋值
+
+    // 可变变量
+    let mut y = 10;
+    println!("y = {}", y);
+    y = 20;
+    println!("y 变为 {}", y);
+
+    // 常量（必须显式类型）
+    const MAX_POINTS: u32 = 100_000;
+    println!("常量 MAX_POINTS = {}", MAX_POINTS);
+
+    // 变量遮蔽（shadowing）
+    let z = "hello";
+    let z = z.len();   // 同名新变量，类型变了
+    println!("z 的长度 = {}", z);
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> y = 10
+y 变为 20
+常量 MAX_POINTS = 100000
+z 的长度 = 5</code></pre>
+
+    <div class="tip">
+      <strong>✅ 最佳实践：</strong>优先使用不可变变量，只有必要时才加 <code>mut</code>。变量遮蔽让你可以在同一作用域复用变量名并改变类型。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第三章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch3">3. 基础数据类型</h2>
+    <p>Rust 是静态强类型语言，但编译器通常能推断类型。以下是最常用的标量和复合类型：</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>分类</th>
+            <th>类型</th>
+            <th>字面量示例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>整数</td>
+            <td><code>i8, i16, i32, i64, u8, u16, u32, u64</code></td>
+            <td><code>-42, 0xff, 0o77, 0b1010, 100_000</code></td>
+          </tr>
+          <tr>
+            <td>浮点</td>
+            <td><code>f32, f64</code></td>
+            <td><code>3.14, 2.0e5</code></td>
+          </tr>
+          <tr>
+            <td>布尔</td>
+            <td><code>bool</code></td>
+            <td><code>true, false</code></td>
+          </tr>
+          <tr>
+            <td>字符</td>
+            <td><code>char</code></td>
+            <td><code>'A', '🦀'</code></td>
+          </tr>
+          <tr>
+            <td>元组</td>
+            <td><code>(T1, T2, ...)</code></td>
+            <td><code>(1, "hi", 3.14)</code></td>
+          </tr>
+          <tr>
+            <td>数组</td>
+            <td><code>[T; N]</code></td>
+            <td><code>[1, 2, 3, 4, 5]</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <pre><code>fn main() {
+    // 整数（默认 i32）
+    let a = 42;
+    let b: u64 = 123_456;
+    // 浮点（默认 f64）
+    let pi = 3.14159;
+    // 布尔
+    let is_ok = true;
+    // 字符（Unicode，占 4 字节）
+    let crab = '🦀';
+    // 元组
+    let tup: (i32, &str, f64) = (42, "rust", 3.14);
+    let (x, y, z) = tup; // 解构
+    println!("元组: {} {} {}", x, y, z);
+    // 数组（固定长度）
+    let arr = [10, 20, 30, 40];
+    println!("数组第二个元素: {}", arr[1]);
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> 元组: 42 rust 3.14
+数组第二个元素: 20</code></pre>
+
+    <!-- ============================================================ -->
+    <!-- 第四章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch4">4. 函数与控制流</h2>
+    <p>函数使用 <code>fn</code> 关键字，返回值用箭头 <code>-&gt;</code> 指定。控制流包括 <code>if/else</code>、<code>loop</code>、<code>while</code>、<code>for</code>。</p>
+
+    <pre><code>/// 返回两个数中较大的（演示函数与 if 表达式）
+fn max_of(a: i32, b: i32) -> i32 {
+    if a > b { a } else { b }  // if 是表达式，不需要 return
+}
+
+fn main() {
+    // if 作为表达式赋值
+    let condition = true;
+    let value = if condition { 100 } else { 0 };
+    println!("value = {}", value);
+
+    // loop 循环（可带 break 返回值）
+    let mut counter = 0;
+    let result = loop {
+        counter += 1;
+        if counter == 5 {
+            break counter * 2; // 跳出并返回 10
+        }
+    };
+    println!("loop 返回: {}", result);
+
+    // while 循环
+    let mut n = 3;
+    while n > 0 {
+        print!("{} ", n);
+        n -= 1;
+    }
+    println!();
+
+    // for 循环（最常用）
+    let numbers = [1, 2, 3, 4, 5];
+    for num in numbers.iter() {
+        print!("{} ", num);
+    }
+    println!();
+
+    // 调用函数
+    println!("最大值: {}", max_of(27, 53));
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> value = 100
+loop 返回: 10
+3 2 1
+1 2 3 4 5
+最大值: 53</code></pre>
+
+    <div class="warning">
+      <strong>⚠️ 注意：</strong>Rust 中 <code>if</code> 是表达式而非语句，因此可以出现在赋值右侧。但务必保证所有分支类型一致。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第五章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch5">5. 所有权与借用</h2>
+    <p>所有权是 Rust 最独特的机制——每个值只有一个所有者，离开作用域即被释放。借用（引用）允许在不转移所有权的情况下访问数据。</p>
+
+    <pre><code>fn main() {
+    // ---------- 所有权移动 ----------
+    let s1 = String::from("hello");
+    let s2 = s1;               // s1 的所有权移动到 s2
+    // println!("{}", s1);     // ❌ 编译错误：s1 已失效
+    println!("s2 = {}", s2);   // ✅
+
+    // ---------- 克隆（深拷贝） ----------
+    let s3 = s2.clone();
+    println!("s2 = {}, s3 = {}", s2, s3); // 两者都有效
+
+    // ---------- 借用（不可变引用） ----------
+    let len = calculate_length(&s3);
+    println!("'{}' 的长度 = {}", s3, len); // s3 仍然可用
+
+    // ---------- 可变借用 ----------
+    let mut msg = String::from("hello");
+    change_msg(&mut msg);
+    println!("修改后: {}", msg);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len() // 不持有所有权，只读取
+}
+
+fn change_msg(s: &mut String) {
+    s.push_str(", world!");
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> s2 = hello
+s2 = hello, s3 = hello
+'hello' 的长度 = 5
+修改后: hello, world!</code></pre>
+
+    <div class="note">
+      <strong>💡 核心规则：</strong>同一时刻只能有一个可变引用，或者多个不可变引用，但不能同时存在可变与不可变引用。这保证了数据竞争在编译期就被消除。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第六章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch6">6. 切片类型</h2>
+    <p>切片（slice）是对集合中一段连续元素的<strong>引用</strong>，不拥有所有权。字符串切片是最常见的用法。</p>
+
+    <pre><code>fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[..i]; // 返回空格前的切片
+        }
+    }
+    &s[..] // 整个字符串
+}
+
+fn main() {
+    let sentence = String::from("hello rust world");
+    let word = first_word(&sentence[..]);
+    println!("第一个单词: {}", word);
+
+    // 数组切片
+    let arr = [1, 2, 3, 4, 5];
+    let slice = &arr[1..4]; // [2, 3, 4]
+    println!("数组切片: {:?}", slice);
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> 第一个单词: hello
+数组切片: [2, 3, 4]</code></pre>
+
+    <div class="tip">
+      <strong>✅ 最佳实践：</strong>函数参数中使用 <code>&amp;str</code> 而非 <code>&amp;String</code>，因为前者更通用，可以接受字符串字面量和 <code>String</code> 的切片。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第七章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch7">7. 结构体与方法</h2>
+    <p>结构体（struct）用于自定义数据类型。方法通过 <code>impl</code> 块定义，第一个参数总是 <code>self</code>（或其变体）。</p>
+
+    <pre><code>#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+// 方法块
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width >= other.width && self.height >= other.height
+    }
+
+    // 关联函数（不是方法，类似静态构造器）
+    fn square(size: u32) -> Rectangle {
+        Rectangle { width: size, height: size }
+    }
+}
+
+fn main() {
+    let rect1 = Rectangle { width: 30, height: 50 };
+    let rect2 = Rectangle::square(20);
+
+    println!("rect1 面积: {}", rect1.area());
+    println!("rect1 能容纳 rect2? {}", rect1.can_hold(&rect2));
+    println!("rect2: {:?}", rect2);
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> rect1 面积: 1500
+rect1 能容纳 rect2? true
+rect2: Rectangle { width: 20, height: 20 }</code></pre>
+
+    <div class="note">
+      <strong>💡 提示：</strong><code>#[derive(Debug)]</code> 让结构体可以自动实现调试打印（<code>{:?}</code>）。关联函数用 <code>::</code> 调用，如 <code>Rectangle::square(20)</code>。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第八章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch8">8. 枚举与模式匹配</h2>
+    <p>枚举（enum）可以携带不同类型的数据。<code>match</code> 是 Rust 中极其强大的模式匹配工具，必须穷尽所有分支。</p>
+
+    <pre><code>enum IpAddr {
+    V4(u8, u8, u8, u8),
+    V6(String),
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => {
+            println!("幸运便士！");
+            1
+        }
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+}
+
+fn main() {
+    let home = IpAddr::V4(127, 0, 0, 1);
+    let loopback = IpAddr::V6(String::from("::1"));
+
+    // 使用 match 处理枚举
+    let coin = Coin::Dime;
+    println!("价值 {} 美分", value_in_cents(coin));
+
+    // if let —— 只关心单个模式的简洁写法
+    let config_max = Some(3u8);
+    if let Some(max) = config_max {
+        println!("最大值为 {}", max);
+    }
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> 价值 10 美分
+最大值为 3</code></pre>
+
+    <div class="warning">
+      <strong>⚠️ 注意：</strong><code>match</code> 必须覆盖所有可能性。如果不想处理某些分支，可以用 <code>_ =&gt; ()</code> 通配符。而 <code>if let</code> 适合只匹配一种情况的场景。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第九章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch9">9. 错误处理</h2>
+    <p>Rust 没有异常机制，而是使用 <code>Result&lt;T, E&gt;</code> 和 <code>panic!</code>。可恢复错误用 <code>Result</code>，不可恢复用 <code>panic!</code>。</p>
+
+    <pre><code>use std::fs::File;
+use std::io::{self, Read};
+
+/// 读取文件内容（演示 ? 运算符传播错误）
+fn read_file_content(path: &str) -> Result<String, io::Error> {
+    let mut file = File::open(path)?;  // 如果出错，提前返回 Err
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    Ok(contents)
+}
+
+fn main() {
+    // 故意打开不存在的文件
+    let result = read_file_content("nonexistent.txt");
+
+    match result {
+        Ok(text) => println!("文件内容:\n{}", text),
+        Err(e) => eprintln!("❌ 读取失败: {}", e),
+    }
+
+    // unwrap / expect —— 简化但不推荐在生产中滥用
+    // let data = read_file_content("Cargo.toml").expect("无法读取 Cargo.toml");
+    // println!("{}", data);
+}</code></pre>
+
+    <pre><code><span class="output-label">输出（示例）</span> ❌ 读取失败: No such file or directory (os error 2)</code></pre>
+
+    <div class="tip">
+      <strong>✅ 最佳实践：</strong>在库函数中优先返回 <code>Result</code>，让调用者决定如何处理错误。使用 <code>?</code> 运算符可以大幅简化错误传播代码。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第十章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch10">10. 泛型与 trait</h2>
+    <p>泛型让代码适用于多种类型；trait 定义了共享行为，类似于其他语言的接口。</p>
+
+    <pre><code>// 泛型函数：找出数组中最大的元素（需要 PartialOrd 约束）
+fn largest<T: PartialOrd>(list: &[T]) -> &T {
+    let mut largest = &list[0];
+    for item in list.iter() {
+        if item > largest {
+            largest = item;
+        }
+    }
+    largest
+}
+
+// 定义一个 trait
+trait Summary {
+    fn summarize(&self) -> String;
+}
+
+struct Article {
+    title: String,
+    author: String,
+}
+
+impl Summary for Article {
+    fn summarize(&self) -> String {
+        format!("《{}》by {}", self.title, self.author)
+    }
+}
+
+fn main() {
+    // 泛型函数测试
+    let numbers = vec![34, 67, 12, 89, 23];
+    println!("最大数字: {}", largest(&numbers));
+
+    let chars = ['y', 'm', 'a', 'q'];
+    println!("最大字符: {}", largest(&chars));
+
+    // trait 使用
+    let art = Article {
+        title: String::from("Rust 入门"),
+        author: String::from("心幻"),
+    };
+    println!("摘要: {}", art.summarize());
+
+    // 也可以写成泛型函数接收实现了 Summary 的类型
+    notify(&art);
+}
+
+fn notify(item: &impl Summary) {
+    println!("通知: {}", item.summarize());
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> 最大数字: 89
+最大字符: y
+摘要: 《Rust 入门》by 心幻
+通知: 摘要: 《Rust 入门》by 心幻</code></pre>
+
+    <!-- ============================================================ -->
+    <!-- 第十一章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch11">11. 常用集合</h2>
+    <p><code>Vec&lt;T&gt;</code>（动态数组）、<code>HashMap&lt;K, V&gt;</code>（哈希表）和 <code>String</code> 是日常开发中最常用的三种集合。</p>
+
+    <pre><code>use std::collections::HashMap;
+
+fn main() {
+    // ----- Vec -----
+    let mut v: Vec<i32> = Vec::new();
+    v.push(10);
+    v.push(20);
+    v.push(30);
+    println!("v = {:?}", v);
+
+    // 宏创建
+    let v2 = vec![1, 2, 3, 4, 5];
+    let third = v2.get(2); // Option<&i32>
+    match third {
+        Some(val) => println!("第三个元素: {}", val),
+        None => println!("索引越界"),
+    }
+
+    // 遍历
+    for i in &v2 {
+        print!("{} ", i);
+    }
+    println!();
+
+    // ----- HashMap -----
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Alice"), 95);
+    scores.insert(String::from("Bob"), 82);
+    scores.insert(String::from("Charlie"), 91);
+
+    let name = String::from("Bob");
+    if let Some(score) = scores.get(&name) {
+        println!("{} 的成绩: {}", name, score);
+    }
+
+    // 遍历
+    for (key, value) in &scores {
+        println!("{} → {}", key, value);
+    }
+
+    // ----- String -----
+    let mut s = String::from("你好");
+    s.push_str("，世界");
+    s.push('！');
+    println!("{}", s);
+    println!("长度: {}", s.chars().count()); // 实际字符数
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> v = [10, 20, 30]
+第三个元素: 3
+1 2 3 4 5
+Bob 的成绩: 82
+Alice → 95
+Bob → 82
+Charlie → 91
+你好，世界！
+长度: 6</code></pre>
+
+    <div class="note">
+      <strong>💡 提示：</strong>访问 Vec 元素推荐用 <code>.get(index)</code> 返回 <code>Option</code>，避免直接下标访问导致 panic。HashMap 的 <code>entry</code> API 可以优雅地处理插入或更新逻辑。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第十二章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch12">12. 生命周期入门</h2>
+    <p>生命周期注解告诉编译器引用之间的存活关系，确保不会产生悬垂引用。这是 Rust 最难的概念之一，但日常使用中多数时候编译器会自动推断。</p>
+
+    <pre><code>/// 返回两个字符串切片中较长的那个（需要生命周期标注）
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+
+fn main() {
+    let string1 = String::from("long long string");
+    let result;
+    {
+        let string2 = "short";
+        result = longest(string1.as_str(), string2);
+        println!("较长的是: {}", result);
+    } // string2 在这里结束，但 result 的生命周期与 string1 和 string2 中较短的一致
+      // 下面这行如果取消注释会编译错误，因为 string2 已失效
+      // println!("{}", result);
+}
+</code></pre>
+
+    <pre><code><span class="output-label">输出</span> 较长的是: long long string</code></pre>
+
+    <div class="warning">
+      <strong>⚠️ 注意：</strong>生命周期注解 <code>'a</code> 并不改变引用的实际存活时间，只是建立约束。多数情况下，函数签名中的生命周期可以省略（遵循 elision 规则）。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第十三章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch13">13. 闭包与迭代器</h2>
+    <p>闭包是可以捕获环境的匿名函数；迭代器提供了一种高效、链式的集合处理方式。二者结合非常强大。</p>
+
+    <pre><code>fn main() {
+    // ----- 闭包 -----
+    let factor = 3;
+    let multiply = |x| x * factor; // 捕获外部变量 factor
+    println!("5 * 3 = {}", multiply(5));
+
+    // 闭包作为参数
+    let numbers = vec![1, 2, 3, 4, 5, 6];
+    let evens: Vec<_> = numbers
+        .iter()
+        .filter(|&&x| x % 2 == 0)   // 闭包：过滤偶数
+        .map(|x| x * 10)           // 闭包：每个乘以 10
+        .collect();
+    println!("偶数翻十倍: {:?}", evens);
+
+    // ----- 迭代器适配器 -----
+    let sum: i32 = (1..=100).sum(); // 1 到 100 求和
+    println!("1+2+...+100 = {}", sum);
+
+    // 链式操作：找出所有能被 3 整除的数，取前 5 个，平方后收集
+    let result: Vec<_> = (1..)
+        .filter(|x| x % 3 == 0)
+        .take(5)
+        .map(|x| x * x)
+        .collect();
+    println!("前 5 个 3 的倍数的平方: {:?}", result);
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> 5 * 3 = 15
+偶数翻十倍: [20, 40, 60]
+1+2+...+100 = 5050
+前 5 个 3 的倍数的平方: [9, 36, 81, 144, 225]</code></pre>
+
+    <div class="tip">
+      <strong>✅ 最佳实践：</strong>优先使用迭代器和闭包组合来处理集合数据，代码更简洁、更具表现力，且性能通常不低于手写循环（因为迭代器是零开销抽象的典范）。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第十四章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch14">14. 模块系统</h2>
+    <p>Rust 使用 <code>mod</code>、<code>use</code> 和 <code>pub</code> 组织代码。每个 crate 都有一个根模块（<code>main.rs</code> 或 <code>lib.rs</code>）。</p>
+
+    <pre><code>// 假设 src/lib.rs 或 src/main.rs 中包含以下内容
+
+/// 公共函数：对外可见
+pub fn greet(name: &str) -> String {
+    format!("你好，{}！", name)
+}
+
+/// 内部辅助函数：仅当前 crate 可见
+fn internal_helper() {
+    println!("这是一个内部函数");
+}
+
+// 子模块
+pub mod math {
+    /// 加法（公开）
+    pub fn add(a: i32, b: i32) -> i32 {
+        a + b
+    }
+
+    /// 乘法（公开）
+    pub fn mul(a: i32, b: i32) -> i32 {
+        a * b
+    }
+
+    /// 私有函数：仅 math 模块内部可用
+    fn private_debug() {
+        println!("math 模块内部");
+    }
+}
+
+fn main() {
+    // 使用 use 导入
+    use math::{add, mul};
+    println!("3 + 5 = {}", add(3, 5));
+    println!("4 * 7 = {}", mul(4, 7));
+    println!("{}", greet("Rustacean"));
+}</code></pre>
+
+    <pre><code><span class="output-label">输出</span> 3 + 5 = 8
+4 * 7 = 28
+你好，Rustacean！</code></pre>
+
+    <div class="note">
+      <strong>💡 提示：</strong>Rust 2018 edition 之后，模块路径采用绝对路径（<code>crate::</code>）或相对路径（<code>self::</code>, <code>super::</code>）。<code>pub(crate)</code> 可将可见性限制在当前 crate 内。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第十五章 -->
+    <!-- ============================================================ -->
+    <h2 id="ch15">15. 并发基础</h2>
+    <p>Rust 通过 <code>std::thread</code> 和消息传递（channel）提供安全并发。所有权和类型系统在编译期杜绝数据竞争。</p>
+
+    <pre><code>use std::sync::mpsc;
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    // ----- 创建线程 -----
+    let handle = thread::spawn(|| {
+        for i in 1..5 {
+            println!("👾 子线程: {}", i);
+            thread::sleep(Duration::from_millis(300));
+        }
+    });
+
+    for i in 1..3 {
+        println!("👤 主线程: {}", i);
+        thread::sleep(Duration::from_millis(400));
+    }
+
+    handle.join().unwrap(); // 等待子线程结束
+    println!("--- 线程已汇合 ---");
+
+    // ----- 通道（Channel）消息传递 -----
+    let (tx, rx) = mpsc::channel();
+
+    let tx_clone = tx.clone();
+    thread::spawn(move || {
+        let vals = vec!["ping", "pong", "done"];
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_millis(200));
+        }
+    });
+
+    thread::spawn(move || {
+        let vals = vec!["hello", "world"];
+        for val in vals {
+            tx_clone.send(val).unwrap();
+            thread::sleep(Duration::from_millis(350));
+        }
+    });
+
+    // 主线程接收所有消息
+    for received in rx {
+        println!("📩 收到: {}", received);
+    }
+}</code></pre>
+
+    <pre><code><span class="output-label">输出（顺序因调度而异）</span> 👤 主线程: 1
+👾 子线程: 1
+👾 子线程: 2
+👤 主线程: 2
+👾 子线程: 3
+👾 子线程: 4
+--- 线程已汇合 ---
+📩 收到: ping
+📩 收到: hello
+📩 收到: pong
+📩 收到: world
+📩 收到: done</code></pre>
+
+    <div class="warning">
+      <strong>⚠️ 注意：</strong>线程间传递所有权时，<code>move</code> 关键字将捕获的变量移动到闭包中。通道的 <code>send</code> 也会转移所有权，从而保证线程安全。
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 结语 -->
+    <!-- ============================================================ -->
+    <h2 style="margin-top:44px;">🎯 下一步做什么？</h2>
+    <p>
+      以上 15 个章节涵盖了 Rust 最核心的语言特性。你可以：
+    </p>
+    <ul>
+      <li>阅读官方书籍 <a href="https://doc.rust-lang.org/book/" target="_blank">The Rust Programming Language</a>（免费）</li>
+      <li>在 <a href="https://play.rust-lang.org/" target="_blank">Rust Playground</a> 上在线实验代码</li>
+      <li>尝试用 Rust 写一个小工具或 CLI 应用（推荐 <code>clap</code> 库处理命令行参数）</li>
+      <li>深入学习异步编程（<code>async/await</code>）和 Web 框架（如 Axum、Actix-web）</li>
+    </ul>
+
+    <blockquote>
+      “Rust 不是一门容易掌握的语言，但它会让你成为更好的程序员。” — 社区箴言
+    </blockquote>
+
+    <div class="tip" style="margin-bottom:30px;">
+      <strong>🦀 保持练习：</strong>每天写一点 Rust 代码，理解所有权和生命周期的直觉。遇到问题时，编译器的错误提示往往就是最好的
