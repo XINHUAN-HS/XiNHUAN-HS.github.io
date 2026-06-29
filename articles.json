@@ -60,6 +60,12 @@
     "date": "2026-06-20"
   },
   {
+    "title": "🦀 Rust 语言入门完全指南 · 从零开始",
+    "path": "article/rust-complete-guide.html",
+    "description": "本文是一套面向初学者的 Rust 教程，每个知识点都附带可直接运行的示例。你只需安装 Rust 工具链，就能跟着代码一步步上手。无论你是刚接触系统编程，还是想了解 Rust 的安全哲学，这份指南都能帮你快速建立完整认知。",
+    "date": "2026-06-29"
+  },
+  {
     "title": "⚡ Vite 从入门到精通：下一代前端构建工具实战指南",
     "path": "article/vite-guide.html",
     "description": "Vite（法语意为“快速”）是由 Vue\n      作者尤雨溪开发的新一代前端构建工具。它利用浏览器原生 ES Module\n      导入特性，实现了开发服务器的秒级冷启动和即时热更新。无论是 Vue、React 还是\n      Svelte 项目，Vite 都能显著提升开发效率。本文将从创建项目开始，带你全面掌握\n      Vite 的配置、插件、环境变量、生产构建及高级优化技巧。",
