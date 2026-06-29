@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- ★ 修改此处：文章标题（显示在浏览器标签页） -->
+    <title>JavaScript 函数进阶教程 — 从基础到高阶</title>
+    <style>
+      /* ========== 全局基础样式 ========== */
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: clamp(16px, 4vw, 40px); /* 窄屏缩小边距 */
+        line-height: 1.8;
+        max-width: 860px; /* 略宽一点，适应更大屏幕 */
+        margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      /* ========== 隐藏滚动条（必须保留） ========== */
+      html {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge 旧版 */
+      }
+      html::-webkit-scrollbar {
+        display: none; /* Chrome/Safari/Edge 新版 */
+      }
+
+      /* ========== 标题区（日期自动显示在右侧） ========== */
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: clamp(1.3rem, 5vw, 2rem); /* 标题自适应 */
+      }
+      h1 .pub-date {
+        font-size: 0.55em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+
+      /* ========== 二级标题 ========== */
+      h2 {
+        color: #8ab4ff;
+        margin-top: 30px;
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
+      }
+      h3 {
+        color: #9bc0ff;
+        margin-top: 20px;
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+      }
+
+      /* ========== 段落与文本 ========== */
+      p {
+        font-size: clamp(0.95rem, 3vw, 1.05rem);
+      }
+
+      /* ========== 代码样式 ========== */
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        word-break: break-word; /* 防止长代码溢出 */
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.6);
+        border: 1px solid rgba(140, 180, 255, 0.1);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto; /* 窄屏可横向滚动 */
+        font-size: 0.82em;
+        -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+      }
+
+      /* ========== 列表 ========== */
+      ul,
+      ol {
+        padding-left: 20px;
+      }
+      li {
+        margin: 6px 0;
+      }
+
+      /* ========== 引用块 / 提示框 ========== */
+      blockquote {
+        border-left: 3px solid rgba(140, 180, 255, 0.3);
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(140, 180, 255, 0.04);
+        color: rgba(200, 214, 255, 0.75);
+      }
+      .note,
+      .warning,
+      .tip {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+        font-size: clamp(0.88rem, 2.8vw, 1rem);
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.08);
+        border-left: 3px solid #ffcc66;
+      }
+      .warning {
+        background: rgba(255, 100, 100, 0.08);
+        border-left: 3px solid #ff6464;
+      }
+      .tip {
+        background: rgba(100, 255, 150, 0.08);
+        border-left: 3px solid #64ff96;
+      }
+
+      /* ========== 链接 ========== */
+      a {
+        color: #8ab4ff;
+        word-break: break-all; /* 长链接换行 */
+      }
+      a:hover {
+        color: #aaccff;
+      }
+
+      /* ========== 表格（窄屏可横向滚动） ========== */
+      .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 20px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 360px; /* 保证窄屏时出现滚动条 */
+      }
+      th,
+      td {
+        border: 1px solid rgba(140, 180, 255, 0.15);
+        padding: 10px 14px;
+        text-align: left;
+        font-size: clamp(0.83rem, 2.5vw, 0.94rem);
+      }
+      th {
+        background: rgba(140, 180, 255, 0.08);
+        color: #8ab4ff;
+      }
+
+      /* ========== 图片 ========== */
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+
+      /* ========== 响应式适配（细调） ========== */
+      @media (max-width: 800px) {
+        body {
+          padding: 20px 16px;
+        }
+        h1 {
+          flex-direction: column; /* 标题与日期上下排列 */
+          align-items: flex-start;
+        }
+        h1 .pub-date {
+          font-size: 0.48em;
+        }
+        pre {
+          padding: 14px;
+          font-size: 0.76em;
+        }
+        .note,
+        .warning,
+        .tip {
+          padding: 11px 13px;
+        }
+        th,
+        td {
+          padding: 9px 11px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        body {
+          padding: 14px 10px;
+        }
+        h2 {
+          margin-top: 26px;
+        }
+        h3 {
+          margin-top: 18px;
+        }
+        pre {
+          padding: 10px;
+          font-size: 0.7em;
+        }
+        table {
+          min-width: 280px;
+        }
+        th,
+        td {
+          padding: 7px 8px;
+          font-size: 0.77rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ★ 修改此处：文章主标题 + 发布日期 -->
+    <h1>
+      <span>⚡ JavaScript 函数进阶教程</span>
+      <span class="pub-date">— 2026-06-28</span>
+    </h1>
+
+    <!-- ★ 文章导语（可选） -->
+    <p>函数是 JavaScript 的核心构建块之一。掌握函数不仅能让你写出更简洁、可复用的代码，还能深入理解闭包、高阶函数、柯里化等高级概念。本文将从基础出发，逐步带你走进 JS 函数的进阶世界。</p>
+
+    <!-- ★ 正文开始，按需使用 h2/h3、p、pre、ul、blockquote、.note 等 -->
+
+    <h2>1. 函数基础回顾</h2>
+    <p>在 ES6 之前，JavaScript 只有一种函数声明方式——<code>function</code> 关键字。ES6 引入了箭头函数，让函数写法更加简洁。我们先快速回顾一下几种定义方式：</p>
+
+    <pre><code>// 函数声明
+function sum(a, b) {
+  return a + b;
+}
+
+// 函数表达式
+const multiply = function(a, b) {
+  return a * b;
+};
+
+// 箭头函数（ES6）
+const divide = (a, b) => a / b;</code></pre>
+
+    <div class="note"><strong>💡 提示：</strong>函数声明会被提升（hoisting），而函数表达式不会。箭头函数没有自己的 <code>this</code> 和 <code>arguments</code>，适合用于回调场景。</div>
+
+    <h2>2. 参数处理：剩余参数与默认值</h2>
+    <p>现代 JS 提供了更灵活的参数处理方式，让函数签名更具表现力。</p>
+
+    <h3>2.1 默认参数</h3>
+    <pre><code>function greet(name = "朋友", greeting = "你好") {
+  return `${greeting}，${name}！`;
+}
+console.log(greet());           // 你好，朋友！
+console.log(greet("小明"));     // 你好，小明！
+console.log(greet("小红", "嗨")); // 嗨，小红！</code></pre>
+
+    <h3>2.2 剩余参数</h3>
+    <pre><code>function logAll(first, ...rest) {
+  console.log("第一个参数:", first);
+  console.log("其余参数:", rest);
+}
+logAll(1, 2, 3, 4, 5);
+// 输出：
+// 第一个参数: 1
+// 其余参数: [2, 3, 4, 5]</code></pre>
+
+    <div class="tip"><strong>✅ 最佳实践：</strong>剩余参数必须放在参数列表的最后一位，且一个函数只能有一个剩余参数。</div>
+
+    <h2>3. 高阶函数：函数作为一等公民</h2>
+    <p>在 JavaScript 中，函数可以作为参数传递给另一个函数，也可以作为返回值返回。这种函数被称为高阶函数（Higher-Order Function）。</p>
+
+    <h3>3.1 数组中的高阶函数</h3>
+    <p><code>map</code>、<code>filter</code>、<code>reduce</code> 是最常用的三个高阶函数：</p>
+
+    <pre><code>const numbers = [1, 2, 3, 4, 5];
+
+// map：对每个元素做变换
+const doubled = numbers.map(n => n * 2);
+console.log(doubled); // [2, 4, 6, 8, 10]
+
+// filter：筛选满足条件的元素
+const evens = numbers.filter(n => n % 2 === 0);
+console.log(evens);   // [2, 4]
+
+// reduce：累计归约
+const total = numbers.reduce((acc, cur) => acc + cur, 0);
+console.log(total);   // 15</code></pre>
+
+    <h3>3.2 自定义高阶函数</h3>
+    <pre><code>// 创建一个「日志装饰器」
+function withLogging(fn) {
+  return function(...args) {
+    console.log(`调用函数 ${fn.name}，参数:`, args);
+    const result = fn(...args);
+    console.log(`返回结果:`, result);
+    return result;
+  };
+}
+
+const add = (a, b) => a + b;
+const loggedAdd = withLogging(add);
+loggedAdd(3, 4);
+// 输出：
+// 调用函数 add，参数: [3, 4]
+// 返回结果: 7</code></pre>
+
+    <div class="note"><strong>💡 提示：</strong>高阶函数是函数式编程的基础，它让代码更加抽象和可组合。</div>
+
+    <h2>4. 闭包：函数与环境的结合</h2>
+    <p>闭包是指一个函数能够记住并访问其词法作用域中的变量，即使该函数在其词法作用域之外执行。它是 JavaScript 最强大的特性之一。</p>
+
+    <pre><code>function createCounter() {
+  let count = 0; // 私有变量
+  return function() {
+    count++;
+    return count;
+  };
+}
+
+const counter = createCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2
+console.log(counter()); // 3
+
+// 每次调用都共享同一个 count 变量
+const anotherCounter = createCounter();
+console.log(anotherCounter()); // 1（新的独立闭包）</code></pre>
+
+    <div class="warning"><strong>⚠️ 注意：</strong>闭包会持有外部变量的引用，可能导致内存无法释放。在使用闭包时要注意避免不必要的内存泄漏，尤其是在大型应用中。</div>
+
+    <h3>4.1 闭包的经典应用：防抖与节流</h3>
+    <pre><code>// 防抖：多次触发只执行最后一次
+function debounce(fn, delay = 300) {
+  let timer = null;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+// 节流：固定时间间隔内只执行一次
+function throttle(fn, interval = 300) {
+  let lastTime = 0;
+  return function(...args) {
+    const now = Date.now();
+    if (now - lastTime >= interval) {
+      lastTime = now;
+      fn.apply(this, args);
+    }
+  };
+}</code></pre>
+
+    <h2>5. 立即执行函数表达式（IIFE）</h2>
+    <p>IIFE（Immediately Invoked Function Expression）是在定义后立即执行的函数。它常用于创建独立的作用域，避免变量污染全局。</p>
+
+    <pre><code>(function() {
+  var privateVar = "只有我能访问";
+  console.log(privateVar);
+})();
+// 输出: 只有我能访问
+// privateVar 在外部不可访问
+
+// 带参数的 IIFE
+const result = (function(a, b) {
+  return a * b;
+})(5, 6);
+console.log(result); // 30</code></pre>
+
+    <div class="tip"><strong>✅ 最佳实践：</strong>在现代模块化开发中，IIFE 的使用场景有所减少，但在一些遗留代码或需要隔离作用域的场景下仍然非常有用。</div>
+
+    <h2>6. 递归：函数调用自身</h2>
+    <p>递归是一种编程技巧，函数内部调用自身来解决问题。经典的例子包括阶乘、斐波那契数列和树的遍历。</p>
+
+    <pre><code>// 计算阶乘 n!
+function factorial(n) {
+  if (n <= 1) return 1;       // 基线条件
+  return n * factorial(n - 1); // 递归步骤
+}
+console.log(factorial(5)); // 120
+
+// 斐波那契数列（优化版：带记忆）
+function fibonacci(n, memo = {}) {
+  if (n <= 1) return n;
+  if (memo[n]) return memo[n];
+  memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
+  return memo[n];
+}
+console.log(fibonacci(10)); // 55</code></pre>
+
+    <div class="warning"><strong>⚠️ 注意：</strong>递归深度过大可能导致栈溢出（Stack Overflow）。对于深层递归，可以考虑改用循环或尾递归优化（但 JS 引擎对尾递归的支持有限）。</div>
+
+    <h2>7. 柯里化：将多参数函数转换为链式单参数函数</h2>
+    <p>柯里化（Currying）是把接受多个参数的函数变换成接受单一参数（最初函数的第一个参数）的函数，并且返回接受余下参数的新函数。</p>
+
+    <pre><code>// 普通版本
+function add(a, b, c) {
+  return a + b + c;
+}
+
+// 柯里化版本
+function curryAdd(a) {
+  return function(b) {
+    return function(c) {
+      return a + b + c;
+    };
+  };
+}
+console.log(curryAdd(1)(2)(3)); // 6
+
+// 通用柯里化工具函数
+function curry(fn) {
+  return function curried(...args) {
+    if (args.length >= fn.length) {
+      return fn.apply(this, args);
+    } else {
+      return function(...nextArgs) {
+        return curried.apply(this, args.concat(nextArgs));
+      };
+    }
+  };
+}
+
+const curriedSum = curry((a, b, c) => a + b + c);
+console.log(curriedSum(1)(2)(3)); // 6
+console.log(curriedSum(1, 2)(3)); // 6</code></pre>
+
+    <div class="note"><strong>💡 提示：</strong>柯里化可以让函数更灵活地复用部分参数，在函数式编程库（如 Lodash、Ramda）中被广泛使用。</div>
+
+    <h2>8. 异步函数：async / await</h2>
+    <p>ES2017 引入的 <code>async / await</code> 让异步代码看起来像同步代码，极大地改善了 Promise 的可读性。</p>
+
+    <pre><code>// 模拟一个异步请求
+function fetchUser(id) {
+  return new Promise(resolve => {
+    setTimeout(() => resolve({ id, name: "用户" + id }), 1000);
+  });
+}
+
+async function loadUsers(ids) {
+  const users = [];
+  for (const id of ids) {
+    const user = await fetchUser(id);
+    users.push(user);
+  }
+  return users;
+}
+
+loadUsers([1, 2, 3]).then(users => console.log(users));
+// 大约 3 秒后输出：[{id:1, name:"用户1"}, {id:2, name:"用户2"}, {id:3, name:"用户3"}]</code></pre>
+
+    <div class="tip"><strong>✅ 最佳实践：</strong>如果多个异步任务互不依赖，应使用 <code>Promise.all</code> 并发执行以提高性能；<code>await</code> 只在需要顺序执行时才使用。</div>
+
+    <h2>9. 函数进阶对比一览</h2>
+    <!-- 如果需要表格，请将 table 放在 div.table-wrapper 内 -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>概念</th>
+            <th>核心特点</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>高阶函数</td>
+            <td>接收或返回函数</td>
+            <td>回调、装饰器、数组方法</td>
+          </tr>
+          <tr>
+            <td>闭包</td>
+            <td>记住外部作用域的变量</td>
+            <td>私有变量、防抖节流、工厂函数</td>
+          </tr>
+          <tr>
+            <td>IIFE</td>
+            <td>定义后立即执行</td>
+            <td>隔离作用域、模块模式</td>
+          </tr>
+          <tr>
+            <td>递归</td>
+            <td>函数调用自身</td>
+            <td>树/图遍历、分治算法</td>
+          </tr>
+          <tr>
+            <td>柯里化</td>
+            <td>多参转单参链式调用</td>
+            <td>参数复用、函数组合</td>
+          </tr>
+          <tr>
+            <td>async/await</td>
+            <td>异步代码同步化</td>
+            <td>异步流程控制、API 请求</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>10. 总结</h2>
+    <p>JavaScript 的函数远不止是一段可重复调用的代码块。从闭包到高阶函数，从柯里化到异步编程，函数在 JS 中扮演着极其灵活的角色。掌握这些进阶用法，能帮助你写出更优雅、更健壮的代码。</p>
+
+    <blockquote>"函数是 JavaScript 的灵魂。理解函数，你就理解了这门语言的一半。" — 很多前端开发者</blockquote>
+
+    <p>希望这篇教程对你有所帮助。如果你有任何疑问或想深入了解某个主题，欢迎随时交流探讨。</p>
+
+    <!-- ★ 底部无需再写日期，已放在标题旁 -->
+  </body>
+</html>
