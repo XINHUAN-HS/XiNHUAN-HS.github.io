@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub 项目巡礼 —— ༺心༒幻༻ 的造物清单</title>
+    <style>
+      /* ========== 全局基础样式 ========== */
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: clamp(16px, 4vw, 40px);
+        line-height: 1.8;
+        max-width: 860px;
+        margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      html {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      html::-webkit-scrollbar { display: none; }
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: clamp(1.3rem, 5vw, 2rem);
+      }
+      h1 .pub-date {
+        font-size: 0.55em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+      h2 {
+        color: #8ab4ff;
+        margin-top: 30px;
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
+      }
+      h3 {
+        color: #9bc0ff;
+        margin-top: 20px;
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+      }
+      p {
+        font-size: clamp(0.95rem, 3vw, 1.05rem);
+      }
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        word-break: break-word;
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.6);
+        border: 1px solid rgba(140, 180, 255, 0.1);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto;
+        font-size: 0.82em;
+        -webkit-overflow-scrolling: touch;
+      }
+      ul, ol { padding-left: 20px; }
+      li { margin: 6px 0; }
+      blockquote {
+        border-left: 3px solid rgba(140, 180, 255, 0.3);
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(140, 180, 255, 0.04);
+        color: rgba(200, 214, 255, 0.75);
+      }
+      .note, .warning, .tip {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+        font-size: clamp(0.88rem, 2.8vw, 1rem);
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.08);
+        border-left: 3px solid #ffcc66;
+      }
+      .warning {
+        background: rgba(255, 100, 100, 0.08);
+        border-left: 3px solid #ff6464;
+      }
+      .tip {
+        background: rgba(100, 255, 150, 0.08);
+        border-left: 3px solid #64ff96;
+      }
+      a {
+        color: #8ab4ff;
+        word-break: break-all;
+      }
+      a:hover { color: #aaccff; }
+      .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 20px 0; }
+      table { width: 100%; border-collapse: collapse; min-width: 360px; }
+      th, td {
+        border: 1px solid rgba(140, 180, 255, 0.15);
+        padding: 10px 14px;
+        text-align: left;
+        font-size: clamp(0.83rem, 2.5vw, 0.94rem);
+      }
+      th { background: rgba(140, 180, 255, 0.08); color: #8ab4ff; }
+      img { max-width: 100%; height: auto; border-radius: 8px; margin: 20px 0; }
+      @media (max-width: 800px) {
+        body { padding: 20px 16px; }
+        h1 { flex-direction: column; align-items: flex-start; }
+        h1 .pub-date { font-size: 0.48em; }
+        pre { padding: 14px; font-size: 0.76em; }
+      }
+      @media (max-width: 520px) {
+        body { padding: 14px 10px; }
+        pre { padding: 10px; font-size: 0.7em; }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <span>🔖 GitHub 项目巡礼 —— ༺心༒幻༻ 的造物清单</span>
+      <span class="pub-date">— 2026-06-29</span>
+    </h1>
+
+    <p>
+      把几个自留地项目串起来介绍一下——从个人技术画像，到深空博客、新标签页、终端工具箱，
+      都是"颜值 + 极简 + 一点赛博味"这条线上的产物。下面逐个拆。
+    </p>
+
+    <!-- ================================================================== -->
+    <!-- ★ 项目总数：4（后续新增请在此处更新计数）                         -->
+    <!-- 新增项目时，复制下方任意一个 h2 区块，粘贴到最后一个项目之后即可。-->
+    <!-- ================================================================== -->
+
+    <h2>1. XINHUAN-HS / XINHUAN-HS —— 量子态矩阵 · 技术画像</h2>
+    <p>
+      GitHub 用户名同名仓库，也就是 Profile README 的载体。
+      整体走"量子态 + 神经网络"的概念包装，把技术栈铺成三列认知核心：
+    </p>
+    <ul>
+      <li><strong>🔴 认知核心</strong>：AI 架构师 / LLM 微调 / 向量数据库</li>
+      <li><strong>🟡 神经通路</strong>：神经网络 / 多智能体系统 / 知识图谱</li>
+      <li><strong>🟢 数据流</strong>：深度学习 / 强化学习 / 实时处理</li>
+    </ul>
+    <p>技术栈铺得很宽，从前端（JS/TS/ReScript/React/Sass）一路到后端（Python/Django/Docker/K8s/AWS）再到系统级（C++/C#/Swift），属于"全栈偏 AI 工程"的自画像。</p>
+    <p>🔗 <a href="https://github.com/XINHUAN-HS/XINHUAN-HS" target="_blank">github.com/XINHUAN-HS/XINHUAN-HS</a></p>
+
+    <!-- ========== 新项目在此插入（复制上方 h2 格式） ========== -->
+
+    <h2>2. XiNHUAN-HS.github.io —— 深空主题静态博客</h2>
+    <p>
+      这个项目就是本篇所在的站点 😄。核心卖点是"深空美学 + 极简"——
+      Canvas 画几百颗星 + 漂移星云 + 太阳系行星点缀，配一个数字时钟和交互式日历。
+    </p>
+    <ul>
+      <li><strong>视觉</strong>：纯黑底 + 银河光带，<code>STAR_COUNT = 460</code> 可调</li>
+      <li><strong>文章系统</strong>：<code>articles.json</code> 驱动，<code>iframe</code> 内嵌，支持搜索 + 日期排序</li>
+      <li><strong>自动化</strong>：<code>create_article.py</code> 扫 <code>article/</code> 目录自动抽标题/日期/导语，回写 JSON</li>
+      <li><strong>部署</strong>：GitHub Pages，根目录 <code>.github/workflows</code> 管 CI</li>
+    </ul>
+    <p>整套东西没用框架，HTML + CSS + Vanilla JS 硬写，配色和模板就是你正在看的这份。</p>
+    <p>🔗 <a href="https://github.com/XINHUAN-HS/XiNHUAN-HS.github.io" target="_blank">github.com/XINHUAN-HS/XiNHUAN-HS.github.io</a></p>
+    <p>🌐 <a href="https://xinhuan-hs.github.io/" target="_blank">xinhuan-hs.github.io</a></p>
+
+    <!-- ========== 新项目在此插入（复制上方 h2 格式） ========== -->
+
+    <div class="tip">
+      <strong>✅ 小技巧：</strong>新文章写完直接 <code>python create_article.py</code>，
+      元数据就进 <code>articles.json</code> 了，不用手改。
+    </div>
+
+    <h2>3. XinHuanNewTab —— 极简多引擎搜索新标签页</h2>
+    <p>
+      Manifest V3 写的浏览器扩展，Chrome / Edge 都能装。
+      定位就是"打开新 tab 别给我堆新闻，给个干净搜索框就行"——
+      支持多引擎切换，UI 走简洁路线，图标 16/32/48/128 四档齐了。
+    </p>
+    <ul>
+      <li><code>manifest.json</code> —— MV3 清单</li>
+      <li><code>index.html + style.css + main.js</code> —— 主页面 / 主题变量 / 搜索切换</li>
+      <li><code>background.js</code> —— 后台服务</li>
+    </ul>
+    <p>装法就是扩展管理里开开发者模式 →"加载已解压的扩展程序"指到文件夹，零依赖。</p>
+    <p>🔗 <a href="https://github.com/XINHUAN-HS/XinHuanNewTab" target="_blank">github.com/XINHUAN-HS/XinHuanNewTab</a></p>
+
+    <!-- ========== 新项目在此插入（复制上方 h2 格式） ========== -->
+
+    <h2>4. XinHuanToolKit —— 终端式赛博工具箱</h2>
+    <p>
+      这一款味道最重，Cyberpunk 风 + 模拟终端操作感。页面分四区：
+    </p>
+    <ul>
+      <li><strong>左侧</strong>：系统监控面板 —— CPU / 内存 / 磁盘折线图 + 网络拓扑 + 上下行速度</li>
+      <li><strong>中央</strong>：终端交互区 —— 多视图切换（本地终端 / Iframe 应用），模拟 Shell 输入</li>
+      <li><strong>右侧</strong>：文件系统 —— 应用搜索 + 分类入口</li>
+      <li><strong>底部</strong>：虚拟键盘 —— 全布局，Ctrl/Alt/Shift/CapsLock 都齐，点按输终端</li>
+    </ul>
+    <p>
+      当前监控数据是前端模拟的，<code>script.js</code> 里定时器换成 <code>fetch('/api/system')</code> 就能接真数据。
+      新应用往 <code>apps.json</code> 加，<code>create_apps.py</code> 会根据配置生成 <code>apps/</code> 目录和对应页面。
+    </p>
+    <p>🔗 <a href="https://github.com/XINHUAN-HS/XinHuanToolKit" target="_blank">github.com/XINHUAN-HS/XinHuanToolKit</a></p>
+    <p>🌐 <a href="https://xinhuan-hs.github.io/XinHuanToolKit/" target="_blank">xinhuan-hs.github.io/XinHuanToolKit</a></p>
+
+    <!-- ========== 新项目在此插入（复制上方 h2 格式） ========== -->
+
+    <div class="note">
+      <strong>💡 提醒：</strong>ToolKit 的 Iframe 应用视图要确保目标地址允许 CORS；
+      <code>backdrop-filter</code> 在旧版浏览器也可能掉帧。
+    </div>
+
+    <h2>5. 四个项目的一条暗线</h2>
+    <p>摊开看其实有一条统一审美：深色底 + 低饱和蓝紫光 + 拒绝臃肿框架。</p>
+    <ul>
+      <li>博客 → 深空 / 星空</li>
+      <li>NewTab → 极简 / 留白</li>
+      <li>ToolKit → 赛博 / 终端绿</li>
+      <li>Profile → 量子 / 矩阵 ASCII</li>
+    </ul>
+    <p>技术选型上也偏"能原生就原生"——三个 Web 项目全是 HTML + CSS + Vanilla JS，Python 只出现在构建脚本里。后续大概率会往 AI 工程那条线（向量库 / 多智能体 / RAG）再补一两个仓库，到时这篇再续。</p>
+
+    <!-- ================================================================== -->
+    <!-- ★ 预留新项目模板（复制到上方任意一个「新项目在此插入」处即可）   -->
+    <!--                                                                  -->
+    <!-- <h2>5. 新项目名称 —— 一句话亮点</h2>                              -->
+    <!-- <p>项目简介，一两句话讲清楚做什么、为什么做。</p>                    -->
+    <!-- <ul>                                                               -->
+    <!--   <li><strong>特性一</strong>：说明</li>                           -->
+    <!--   <li><strong>特性二</strong>：说明</li>                           -->
+    <!-- </ul>                                                              -->
+    <!-- <p>🔗 <a href="仓库链接" target="_blank">仓库链接</a></p>         -->
+    <!-- <p>🌐 <a href="在线地址（如有）" target="_blank">在线地址</a></p> -->
+    <!-- ================================================================== -->
+
+    <blockquote>
+      本站所有项目均开源在
+      <a href="https://github.com/XINHUAN-HS" target="_blank">github.com/XINHUAN-HS</a>，
+      欢迎逛仓、提 issue、顺手点个 star ✨
+    </blockquote>
+  </body>
+</html>
