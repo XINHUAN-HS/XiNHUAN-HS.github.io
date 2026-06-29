@@ -30,6 +30,18 @@
     "date": "2026-06-18"
   },
   {
+    "title": "⚡ JavaScript 函数进阶教程",
+    "path": "article/javascript-function-mastery.html",
+    "description": "函数是 JavaScript 的核心构建块之一。掌握函数不仅能让你写出更简洁、可复用的代码，还能深入理解闭包、高阶函数、柯里化等高级概念。本文将从基础出发，逐步带你走进 JS 函数的进阶世界。",
+    "date": "2026-06-28"
+  },
+  {
+    "title": "🔖 GitHub 项目巡礼 —— ༺心༒幻༻ 的造物清单",
+    "path": "article/my-github.html",
+    "description": "把几个自留地项目串起来介绍一下——从个人技术画像，到深空博客、新标签页、终端工具箱，\n      都是\"颜值 + 极简 + 一点赛博味\"这条线上的产物。下面逐个拆。",
+    "date": "2026-06-29"
+  },
+  {
     "title": "🟢 Node.js 环境变量配置与 .env 最佳实践",
     "path": "article/node-env-setup.html",
     "description": "Node.js 通过\n      process.env\n      访问环境变量。合理使用环境变量可以让你的应用更安全、更灵活。",
