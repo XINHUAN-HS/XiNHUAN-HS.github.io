@@ -26,7 +26,6 @@ jobs:
       # 这一步会自动扫描 article 文件夹并更新 articles.json
       - name: 生成文章索引
         run: |
-          pip install -r requirements.txt || true
           python create_article.py
 
       # 4. 部署到 GitHub Pages
