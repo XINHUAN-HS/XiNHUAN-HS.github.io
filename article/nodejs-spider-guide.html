@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- ★ 修改此处：文章标题（显示在浏览器标签页） -->
+    <title>Node.js 爬虫脚本实战指南 — 从入门到部署</title>
+    <style>
+      /* ========== 全局基础样式 ========== */
+      body {
+        background: #0a0e1a;
+        color: #c8d6ff;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: clamp(16px, 4vw, 40px);
+        line-height: 1.8;
+        max-width: 860px;
+        margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      /* ========== 隐藏滚动条（必须保留） ========== */
+      html {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      html::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ========== 标题区 ========== */
+      h1 {
+        color: #7aa9ff;
+        border-bottom: 1px solid rgba(140, 180, 255, 0.2);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: clamp(1.3rem, 5vw, 2rem);
+      }
+      h1 .pub-date {
+        font-size: 0.55em;
+        font-weight: normal;
+        opacity: 0.5;
+        white-space: nowrap;
+      }
+
+      /* ========== 二级标题 ========== */
+      h2 {
+        color: #8ab4ff;
+        margin-top: 30px;
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
+      }
+      h3 {
+        color: #9bc0ff;
+        margin-top: 20px;
+        font-size: clamp(1rem, 3.5vw, 1.25rem);
+      }
+
+      /* ========== 段落与文本 ========== */
+      p {
+        font-size: clamp(0.95rem, 3vw, 1.05rem);
+      }
+
+      /* ========== 代码样式 ========== */
+      code {
+        background: rgba(140, 180, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        word-break: break-word;
+      }
+      pre {
+        background: rgba(10, 14, 30, 0.6);
+        border: 1px solid rgba(140, 180, 255, 0.1);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto;
+        font-size: 0.82em;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* ========== 列表 ========== */
+      ul,
+      ol {
+        padding-left: 20px;
+      }
+      li {
+        margin: 6px 0;
+      }
+
+      /* ========== 引用块 / 提示框 ========== */
+      blockquote {
+        border-left: 3px solid rgba(140, 180, 255, 0.3);
+        margin: 20px 0;
+        padding: 10px 20px;
+        background: rgba(140, 180, 255, 0.04);
+        color: rgba(200, 214, 255, 0.75);
+      }
+      .note,
+      .warning,
+      .tip {
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+        font-size: clamp(0.88rem, 2.8vw, 1rem);
+      }
+      .note {
+        background: rgba(255, 204, 102, 0.08);
+        border-left: 3px solid #ffcc66;
+      }
+      .warning {
+        background: rgba(255, 100, 100, 0.08);
+        border-left: 3px solid #ff6464;
+      }
+      .tip {
+        background: rgba(100, 255, 150, 0.08);
+        border-left: 3px solid #64ff96;
+      }
+
+      /* ========== 链接 ========== */
+      a {
+        color: #8ab4ff;
+        word-break: break-all;
+      }
+      a:hover {
+        color: #aaccff;
+      }
+
+      /* ========== 表格 ========== */
+      .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 20px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 360px;
+      }
+      th,
+      td {
+        border: 1px solid rgba(140, 180, 255, 0.15);
+        padding: 10px 14px;
+        text-align: left;
+        font-size: clamp(0.83rem, 2.5vw, 0.94rem);
+      }
+      th {
+        background: rgba(140, 180, 255, 0.08);
+        color: #8ab4ff;
+      }
+
+      /* ========== 图片 ========== */
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+
+      /* ========== 响应式适配 ========== */
+      @media (max-width: 800px) {
+        body {
+          padding: 20px 16px;
+        }
+        h1 {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        h1 .pub-date {
+          font-size: 0.48em;
+        }
+        pre {
+          padding: 14px;
+          font-size: 0.76em;
+        }
+        .note,
+        .warning,
+        .tip {
+          padding: 11px 13px;
+        }
+        th,
+        td {
+          padding: 9px 11px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        body {
+          padding: 14px 10px;
+        }
+        h2 {
+          margin-top: 26px;
+        }
+        h3 {
+          margin-top: 18px;
+        }
+        pre {
+          padding: 10px;
+          font-size: 0.7em;
+        }
+        table {
+          min-width: 280px;
+        }
+        th,
+        td {
+          padding: 7px 8px;
+          font-size: 0.77rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ★ 文章主标题 + 发布日期 -->
+    <h1>
+      <span>🕷️ Node.js 爬虫脚本实战指南 — 从入门到部署</span>
+      <span class="pub-date">— 2026-06-27</span>
+    </h1>
+
+    <!-- ★ 文章导语 -->
+    <p>
+      网络爬虫是自动化获取互联网数据的利器。在 Node.js 生态中，凭借其非阻塞 I/O
+      和丰富的包管理工具，编写高效爬虫变得异常简单。本文将从环境准备讲起，逐步带你实现一个支持
+      <strong>静态页面抓取</strong>、<strong>动态渲染爬取</strong>、<strong>反爬绕过</strong>以及
+      <strong>数据持久化</strong>的完整爬虫脚本，并分享生产环境的部署与监控经验。
+    </p>
+
+    <!-- ==================== 正文开始 ==================== -->
+
+    <h2>1. 技术选型与核心库</h2>
+    <p>在开始之前，我们先梳理一下 Node.js 爬虫常用的依赖库及其适用场景：</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>库名</th>
+            <th>用途</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>axios</code></td>
+            <td>HTTP 客户端，发起网络请求</td>
+            <td>静态页面、REST API</td>
+          </tr>
+          <tr>
+            <td><code>cheerio</code></td>
+            <td>轻量级 HTML 解析，类 jQuery 语法</td>
+            <td>服务端 DOM 操作</td>
+          </tr>
+          <tr>
+            <td><code>puppeteer</code></td>
+            <td>无头浏览器控制</td>
+            <td>SPA、JS 动态渲染、截图</td>
+          </tr>
+          <tr>
+            <td><code>playwright</code></td>
+            <td>跨浏览器自动化（Chromium / Firefox / WebKit）</td>
+            <td>多浏览器兼容性爬取</td>
+          </tr>
+          <tr>
+            <td><code>node-cron</code></td>
+            <td>定时任务调度</td>
+            <td>周期性增量爬取</td>
+          </tr>
+          <tr>
+            <td><code>winston</code></td>
+            <td>结构化日志</td>
+            <td>日志记录与告警</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <strong>💡 提示：</strong>如果你的目标网站内容由 JavaScript 动态渲染（例如 React / Vue
+      构建的页面），请优先选择 <code>puppeteer</code> 或 <code>playwright</code>；若只是纯 HTML
+      静态页面，<code>axios + cheerio</code> 组合足矣，性能更高且资源消耗更小。
+    </div>
+
+    <h2>2. 项目初始化与基础配置</h2>
+    <p>创建一个新的 Node.js 项目并安装必要依赖：</p>
+
+    <pre><code>mkdir spider-demo && cd spider-demo
+npm init -y
+npm install axios cheerio puppeteer node-cron winston
+# 开发依赖（可选）
+npm install -D nodemon eslint</code></pre>
+
+    <p>推荐的项目目录结构如下：</p>
+
+    <pre><code>spider-demo/
+├── src/
+│   ├── index.js          # 入口文件
+│   ├── crawlers/         # 各站点爬虫逻辑
+│   │   └── example.js
+│   ├── utils/            # 工具函数
+│   │   ├── logger.js     # 日志封装
+│   │   └── proxy.js      # 代理管理
+│   ├── storage/          # 数据存储
+│   │   └── db.js
+│   └── config.js         # 全局配置
+├── data/                 # 输出数据目录
+├── logs/                 # 运行日志
+└── package.json</code></pre>
+
+    <h2>3. 实战一：静态页面爬虫（axios + cheerio）</h2>
+    <p>我们以抓取「腾讯云开发者社区」的文章列表为例，演示最经典的 GET → 解析 → 提取流程。</p>
+
+    <pre><code>// src/crawlers/example.js
+const axios = require('axios');
+const cheerio = require('cheerio');
+const { logger } = require('../utils/logger');
+
+async function fetchArticleList(url) {
+  try {
+    const { data } = await axios.get(url, {
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+          '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+      },
+      timeout: 10000,
+    });
+
+    const $ = cheerio.load(data);
+    const articles = [];
+
+    // 假设每篇文章都在 .article-item 容器中
+    $('.article-item').each((i, el) => {
+      const title = $(el).find('.article-title a').text().trim();
+      const link = $(el).find('.article-title a').attr('href');
+      const summary = $(el).find('.article-summary').text().trim();
+      const date = $(el).find('.article-date').text().trim();
+
+      if (title) {
+        articles.push({ title, link, summary, date });
+      }
+    });
+
+    logger.info(`成功抓取 ${articles.length} 篇文章`);
+    return articles;
+  } catch (err) {
+    logger.error('抓取失败:', err.message);
+    throw err;
+  }
+}
+
+module.exports = { fetchArticleList };</code></pre>
+
+    <div class="tip">
+      <strong>✅ 最佳实践：</strong>始终设置合理的 <code>User-Agent</code> 和
+      <code>timeout</code>，避免被服务器拒绝连接。对于高频请求，建议加入指数退避重试机制。
+    </div>
+
+    <h2>4. 实战二：动态渲染爬虫（Puppeteer）</h2>
+    <p>当目标页面需要执行 JavaScript 才能展示真实内容时，Puppeteer 是最可靠的选择。下面是一个抓取 SPA 页面的例子：</p>
+
+    <pre><code>// src/crawlers/spa.js
+const puppeteer = require('puppeteer');
+const { logger } = require('../utils/logger');
+
+async function crawlDynamicPage(url) {
+  const browser = await puppeteer.launch({
+    headless: true,           // 无头模式
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage', // 减少共享内存占用
+      '--disable-gpu',
+    ],
+  });
+
+  try {
+    const page = await browser.newPage();
+    // 拦截不必要的资源以提升速度
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      if (['image', 'stylesheet', 'font'].includes(req.resourceType())) {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+
+    await page.goto(url, {
+      waitUntil: 'networkidle2', // 等待网络空闲
+      timeout: 30000,
+    });
+
+    // 等待关键元素出现
+    await page.waitForSelector('.post-list', { timeout: 10000 });
+
+    // 执行 DOM 提取
+    const data = await page.evaluate(() => {
+      const items = document.querySelectorAll('.post-item');
+      return Array.from(items).map((item) => ({
+        title: item.querySelector('.post-title')?.innerText?.trim(),
+        url: item.querySelector('.post-title a')?.href,
+        votes: item.querySelector('.vote-count')?.innerText?.trim(),
+      }));
+    });
+
+    logger.info(`动态页面抓取完成，共 ${data.length} 条记录`);
+    return data;
+  } finally {
+    await browser.close();
+  }
+}
+
+module.exports = { crawlDynamicPage };</code></pre>
+
+    <div class="warning">
+      <strong>⚠️ 注意：</strong>Puppeteer 每次启动浏览器都会消耗较多资源。在生产环境中，建议使用
+      <strong>浏览器池</strong> 或复用同一个浏览器实例，避免频繁创建/销毁。
+    </div>
+
+    <h2>5. 反爬策略与应对方案</h2>
+    <p>现实中的网站往往带有反爬机制，以下是常见挑战与应对措施：</p>
+
+    <ul>
+      <li>
+        <strong>IP 频率限制</strong> — 使用代理轮转（Proxy Rotation），搭配 <code>node-fetch</code> 或
+        <code>axios</code> 的拦截器动态更换 IP。
+      </li>
+      <li>
+        <strong>Cookie / Session 校验</strong> — 模拟登录后维持 Cookie 会话，可使用
+        <code>puppeteer</code> 的 <code>page.setCookie()</code> 注入凭证。
+      </li>
+      <li>
+        <strong>JavaScript 挑战（如 CloudFlare）</strong> — 使用 <code>puppeteer-extra-plugin-stealth</code>
+        插件隐藏自动化特征。
+      </li>
+      <li>
+        <strong>验证码</strong> — 接入打码平台（如 2Captcha、超级鹰），或采用 OCR 方案（Tesseract.js）。
+      </li>
+    </ul>
+
+    <pre><code>// utils/proxy.js — 简单的代理轮转示例
+const proxies = [
+  'http://proxy1:8080',
+  'http://proxy2:8080',
+  'http://proxy3:8080',
+];
+let idx = 0;
+
+function getNextProxy() {
+  const proxy = proxies[idx % proxies.length];
+  idx++;
+  return proxy;
+}
+
+module.exports = { getNextProxy };</code></pre>
+
+    <h2>6. 数据存储与去重</h2>
+    <p>爬取的数据通常需要落地存储。根据数据量和查询需求，可以选择不同的存储方案：</p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>方案</th>
+            <th>适合场景</th>
+            <th>示例库</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>JSON 文件</td>
+            <td>小规模、一次性爬取</td>
+            <td><code>fs.writeFileSync</code></td>
+          </tr>
+          <tr>
+            <td>SQLite</td>
+            <td>单机、中等规模</td>
+            <td><code>better-sqlite3</code></td>
+          </tr>
+          <tr>
+            <td>PostgreSQL / MySQL</td>
+            <td>生产级、高并发读写</td>
+            <td><code>pg</code> / <code>mysql2</code></td>
+          </tr>
+          <tr>
+            <td>Elasticsearch</td>
+            <td>全文检索与分析</td>
+            <td><code>@elastic/elasticsearch</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>无论使用哪种存储，<strong>去重</strong>都是必须考虑的环节。简单做法是用 URL 或内容哈希作为唯一键：</p>
+
+    <pre><code>// storage/db.js（SQLite 示例）
+const Database = require('better-sqlite3');
+const db = new Database('./data/spider.db');
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS articles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    url TEXT UNIQUE NOT NULL,
+    title TEXT,
+    summary TEXT,
+    crawled_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+function insertIfNotExists(article) {
+  const stmt = db.prepare(
+    'INSERT OR IGNORE INTO articles (url, title, summary) VALUES (?, ?, ?)'
+  );
+  const result = stmt.run(article.url, article.title, article.summary);
+  return result.changes > 0; // true 表示新增，false 表示重复
+}
+
+module.exports = { db, insertIfNotExists };</code></pre>
+
+    <h2>7. 定时调度与监控</h2>
+    <p>利用 <code>node-cron</code> 可以让爬虫按照指定周期自动运行，结合 <code>winston</code> 记录详细日志便于排查问题。</p>
+
+    <pre><code>// src/index.js — 入口文件
+const cron = require('node-cron');
+const { logger } = require('./utils/logger');
+const { fetchArticleList } = require('./crawlers/example');
+const { insertIfNotExists } = require('./storage/db');
+
+// 每天凌晨 2:00 执行增量抓取
+cron.schedule('0 2 * * *', async () => {
+  logger.info('定时爬虫任务启动');
+  try {
+    const list = await fetchArticleList('https://example.com/articles');
+    let newCount = 0;
+    for (const article of list) {
+      if (insertIfNotExists(article)) {
+        newCount++;
+      }
+    }
+    logger.info(`本次新增 ${newCount} 篇，累计去重后共 ${list.length} 篇`);
+  } catch (err) {
+    logger.error('定时任务执行失败:', err);
+    // 可在此触发企业微信 / Slack 告警
+  }
+});
+
+logger.info('爬虫服务已启动，等待定时任务触发...');</code></pre>
+
+    <div class="note">
+      <strong>💡 提示：</strong>对于生产环境，建议配合 PM2 进行进程守护：<code>pm2 start src/index.js --name spider</code>。
+      同时使用 <code>winston-daily-rotate-file</code> 按天切割日志，避免磁盘爆满。
+    </div>
+
+    <h2>8. 部署与运维建议</h2>
+    <p>将爬虫部署到云服务器时，以下几点能显著提升稳定性：</p>
+
+    <ul>
+      <li><strong>资源限制</strong> — 使用 Docker 容器限定 CPU 和内存上限，防止爬虫意外耗尽主机资源。</li>
+      <li><strong>健康检查</strong> — 暴露一个简单的 HTTP 端点（如 <code>/health</code>），供外部监控系统探测。</li>
+      <li><strong>错误重试</strong> — 对网络超时、500 错误等进行最多 3 次重试，并递增延迟。</li>
+      <li><strong>数据备份</strong> — 定期将 SQLite 或数据库文件备份至对象存储（COS / S3）。</li>
+    </ul>
+
+    <pre><code># 使用 Docker 部署示例
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+CMD ["node", "src/index.js"]</code></pre>
+
+    <blockquote>
+      “爬虫的本质是模拟人类浏览行为，尊重 robots.txt 和使用条款是底线。合理控制频率，不给目标服务器造成压力，才能让爬虫走得更远。”
+    </blockquote>
+
+    <h2>9. 总结与扩展阅读</h2>
+    <p>本文从零搭建了一个具备静态抓取、动态渲染、反爬对抗、数据去重、定时调度和部署能力的 Node.js 爬虫脚本。你可以在此基础上继续探索：</p>
+
+    <ul>
+      <li>使用 <strong>Playwright</strong> 替代 Puppeteer 以获得跨浏览器支持</li>
+      <li>集成 <strong>Redis</strong> 做分布式去重和任务队列</li>
+      <li>通过 <strong>RabbitMQ / Bull</strong> 实现爬虫任务的异步编排</li>
+      <li>结合 <strong>Cheerio + jsdom</strong> 解析复杂嵌套的 HTML 结构</li>
+    </ul>
+
+    <div class="tip">
+      <strong>✅ 最佳实践：</strong>无论爬虫规模大小，始终牢记三点：<strong>限速</strong>、<strong>去重</strong>、<strong>日志</strong>。
+      这能让你的爬虫既高效又“优雅”。
+    </div>
+
+    <p>希望这篇指南能帮你快速上手 Node.js 爬虫开发。如果你在实际项目中遇到了有趣的反爬案例或优化思路，欢迎留言交流。</p>
+
+    <!-- ★ 底部无需再写日期，已放在标题旁 -->
+  </body>
+</html>
