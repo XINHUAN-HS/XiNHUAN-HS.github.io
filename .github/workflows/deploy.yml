@@ -7,11 +7,10 @@ on:
       - main
   workflow_dispatch:
 
-# 必须赋予写入权限，否则 GITHUB_TOKEN 无法推送到 gh-pages
+# 只需要写入仓库内容的权限（因为采用 Deploy from a branch 模式）
 permissions:
   contents: write
-  pages: write      # 允许 Pages 部署
-  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -31,7 +30,7 @@ jobs:
         run: |
           python create_article.py
 
-      # 4. ✅ 检查 articles.json 是否已生成（调试用，失败则终止）
+      # 4. 验证 articles.json 是否已生成
       - name: 验证 articles.json 存在
         run: |
           if [ ! -f articles.json ]; then
@@ -40,12 +39,35 @@ jobs:
           fi
           echo "✅ articles.json 已生成，大小：$(wc -c < articles.json) 字节"
 
-      # 5. 部署到 GitHub Pages（使用 v4，force_orphan 确保每次完全覆盖）
+      # 5. 部署到 GitHub Pages（使用 Deploy from a branch 模式）
       - name: 部署到 GitHub Pages
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add articles.json
-          # 如果没有变化则不提交
-          git diff --cached --quiet || git commit -m "chore: update articles.json [skip ci]"
-          git push origin main
+
+          # 先拉取远程最新代码，避免冲突
+          git pull origin main --rebase
+
+          # 添加 .nojekyll 文件（防止 Jekyll 干扰）
+          touch .nojekyll
+
+          # 添加所有变更（包括 articles.json 和 .nojekyll）
+          git add articles.json .nojekyll
+
+          # 只在有变更时提交和推送
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update articles.json [skip ci]"
+            
+            # 最多重试 3 次推送（应对并发冲突）
+            for i in {1..3}; do
+              if git push origin main; then
+                echo "✅ 推送成功"
+                break
+              else
+                echo "⚠️ 推送失败，尝试拉取最新代码后重试（第 ${i} 次）"
+                git pull origin main --rebase
+              fi
+            done
+          else
+            echo "✅ 没有文件变更，无需提交。"
+          fi
