@@ -4,11 +4,13 @@
 create_article.py
 仅使用 Python 标准库，遍历 article/ 文件夹下的 HTML 文件，
 提取标题、日期、引言，输出 JSON。（中文输出）
+按日期降序排列（最新的在上方）。
 """
 
 import os
 import re
 import json
+
 
 def extract_meta_from_html(file_path):
     """从单个 HTML 文件提取标题、日期、引言（使用正则）"""
@@ -52,6 +54,43 @@ def extract_meta_from_html(file_path):
         "date": date_str
     }
 
+
+def parse_date_to_tuple(date_str):
+    """
+    将日期字符串转为可排序的 (year, month, day) 元组。
+    支持常见格式：
+        - 2024-01-15
+        - 2024年1月15日
+        - 2024/01/15
+        - Jan 15, 2024 （英文，但此处中文站暂不考虑）
+    若解析失败或日期为空，返回 (0,0,0) 使其排在最后。
+    """
+    if not date_str:
+        return (0, 0, 0)
+
+    # 尝试匹配数字：年 月 日
+    # 优先匹配 YYYY-MM-DD 或 YYYY/MM/DD
+    m = re.match(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', date_str)
+    if m:
+        return (int(m.group(1)), int(m.group(2)), int(m.group(3)))
+
+    # 匹配中文格式：YYYY年M月D日
+    m = re.match(r'(\d{4})年(\d{1,2})月(\d{1,2})日', date_str)
+    if m:
+        return (int(m.group(1)), int(m.group(2)), int(m.group(3)))
+
+    # 其他格式尝试提取所有连续数字，取前三个作为年、月、日
+    nums = re.findall(r'\d+', date_str)
+    if len(nums) >= 3:
+        try:
+            return (int(nums[0]), int(nums[1]), int(nums[2]))
+        except ValueError:
+            pass
+
+    # 完全无法解析，当作无效日期
+    return (0, 0, 0)
+
+
 def main():
     article_dir = 'article'
     results = []
@@ -71,10 +110,15 @@ def main():
         else:
             print(f"✗ {filename} → 无法提取元数据")
 
+    # 按日期降序排列（最新的在前）
+    # 同日期时保持原文件名排序（稳定排序）
+    results.sort(key=lambda item: parse_date_to_tuple(item['date']), reverse=True)
+
     output_file = 'articles.json'
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     print(f"\n✅ 完成！共处理 {len(results)} 个文件，结果已保存至 {output_file}")
+
 
 if __name__ == '__main__':
     main()
