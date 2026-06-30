@@ -1,15 +1,27 @@
 [
   {
-    "title": "🔖 文章模板-这里是主标题",
-    "path": "article/article-template.html",
-    "description": "文章模板-这里是文章的简要介绍或引言，可以写一两句话概括全文内容。",
-    "date": "2004-08-15"
+    "title": "🔖 GitHub 项目巡礼 —— ༺心༒幻༻ 的造物清单",
+    "path": "article/my-github.html",
+    "description": "把几个自留地项目串起来介绍一下——从个人技术画像，到深空博客、新标签页、终端工具箱，\n      都是\"颜值 + 极简 + 一点赛博味\"这条线上的产物。下面逐个拆。",
+    "date": "2026-06-29"
   },
   {
-    "title": "⚙️ C/C++ 环境变量配置指南",
-    "path": "article/c&cpp-env-setup.html",
-    "description": "C/C++ 开发的第一步是正确配置编译器和构建工具的环境变量。本文涵盖\n      GCC、MinGW-w64 以及 Visual Studio 命令行工具的 PATH\n      设置，帮助你从终端直接调用编译器。",
-    "date": "2026-06-22"
+    "title": "🦀 Rust 语言入门完全指南 · 从零开始",
+    "path": "article/rust-complete-guide.html",
+    "description": "本文是一套面向初学者的 Rust 教程，每个知识点都附带可直接运行的示例。你只需安装 Rust 工具链，就能跟着代码一步步上手。无论你是刚接触系统编程，还是想了解 Rust 的安全哲学，这份指南都能帮你快速建立完整认知。",
+    "date": "2026-06-29"
+  },
+  {
+    "title": "⚡ JavaScript 函数进阶教程",
+    "path": "article/javascript-function-mastery.html",
+    "description": "函数是 JavaScript 的核心构建块之一。掌握函数不仅能让你写出更简洁、可复用的代码，还能深入理解闭包、高阶函数、柯里化等高级概念。本文将从基础出发，逐步带你走进 JS 函数的进阶世界。",
+    "date": "2026-06-28"
+  },
+  {
+    "title": "🕷️ Node.js 爬虫脚本实战指南 — 从入门到部署",
+    "path": "article/nodejs-spider-guide.html",
+    "description": "网络爬虫是自动化获取互联网数据的利器。在 Node.js 生态中，凭借其非阻塞 I/O\n      和丰富的包管理工具，编写高效爬虫变得异常简单。本文将从环境准备讲起，逐步带你实现一个支持\n      静态页面抓取、动态渲染爬取、反爬绕过以及\n      数据持久化的完整爬虫脚本，并分享生产环境的部署与监控经验。",
+    "date": "2026-06-27"
   },
   {
     "title": "⚡ Electron-Vite 从入门到打包：完整使用指南",
@@ -24,46 +36,10 @@
     "date": "2026-06-23"
   },
   {
-    "title": "☕ Java 环境变量配置详解",
-    "path": "article/java-env-setup.html",
-    "description": "Java 开发离不开正确的环境变量配置。本文将带你一步步配置\n      JAVA_HOME、PATH 和 MAVEN_HOME。",
-    "date": "2026-06-18"
-  },
-  {
-    "title": "⚡ JavaScript 函数进阶教程",
-    "path": "article/javascript-function-mastery.html",
-    "description": "函数是 JavaScript 的核心构建块之一。掌握函数不仅能让你写出更简洁、可复用的代码，还能深入理解闭包、高阶函数、柯里化等高级概念。本文将从基础出发，逐步带你走进 JS 函数的进阶世界。",
-    "date": "2026-06-28"
-  },
-  {
-    "title": "🔖 GitHub 项目巡礼 —— ༺心༒幻༻ 的造物清单",
-    "path": "article/my-github.html",
-    "description": "把几个自留地项目串起来介绍一下——从个人技术画像，到深空博客、新标签页、终端工具箱，\n      都是\"颜值 + 极简 + 一点赛博味\"这条线上的产物。下面逐个拆。",
-    "date": "2026-06-29"
-  },
-  {
-    "title": "🟢 Node.js 环境变量配置与 .env 最佳实践",
-    "path": "article/node-env-setup.html",
-    "description": "Node.js 通过\n      process.env\n      访问环境变量。合理使用环境变量可以让你的应用更安全、更灵活。",
-    "date": "2026-06-15"
-  },
-  {
-    "title": "🕷️ Node.js 爬虫脚本实战指南 — 从入门到部署",
-    "path": "article/nodejs-spider-guide.html",
-    "description": "网络爬虫是自动化获取互联网数据的利器。在 Node.js 生态中，凭借其非阻塞 I/O\n      和丰富的包管理工具，编写高效爬虫变得异常简单。本文将从环境准备讲起，逐步带你实现一个支持\n      静态页面抓取、动态渲染爬取、反爬绕过以及\n      数据持久化的完整爬虫脚本，并分享生产环境的部署与监控经验。",
-    "date": "2026-06-27"
-  },
-  {
-    "title": "🐍 Python 环境变量配置指南",
-    "path": "article/python-env-setup.html",
-    "description": "环境变量是操作系统级别的变量，用于影响程序的行为。对于 Python\n      开发者来说，正确配置环境变量可以简化开发流程，避免硬编码敏感信息。",
-    "date": "2026-06-20"
-  },
-  {
-    "title": "🦀 Rust 语言入门完全指南 · 从零开始",
-    "path": "article/rust-complete-guide.html",
-    "description": "本文是一套面向初学者的 Rust 教程，每个知识点都附带可直接运行的示例。你只需安装 Rust 工具链，就能跟着代码一步步上手。无论你是刚接触系统编程，还是想了解 Rust 的安全哲学，这份指南都能帮你快速建立完整认知。",
-    "date": "2026-06-29"
+    "title": "⚙️ C/C++ 环境变量配置指南",
+    "path": "article/c&cpp-env-setup.html",
+    "description": "C/C++ 开发的第一步是正确配置编译器和构建工具的环境变量。本文涵盖\n      GCC、MinGW-w64 以及 Visual Studio 命令行工具的 PATH\n      设置，帮助你从终端直接调用编译器。",
+    "date": "2026-06-22"
   },
   {
     "title": "⚡ Vite 从入门到精通：下一代前端构建工具实战指南",
@@ -76,5 +52,29 @@
     "path": "article/vue-guide.html",
     "description": "Vue.js 是目前最受欢迎的前端框架之一，广泛应用于单页应用和企业级项目。Vue 2\n      奠定了生态基础，而 Vue 3 带来了 Composition API、TypeScript\n      深度集成、性能大幅提升等重大改进。本文将对两个版本进行系统梳理，帮助开发者理解差异、平滑迁移，并掌握实际项目中的核心技能。",
     "date": "2026-06-21"
+  },
+  {
+    "title": "🐍 Python 环境变量配置指南",
+    "path": "article/python-env-setup.html",
+    "description": "环境变量是操作系统级别的变量，用于影响程序的行为。对于 Python\n      开发者来说，正确配置环境变量可以简化开发流程，避免硬编码敏感信息。",
+    "date": "2026-06-20"
+  },
+  {
+    "title": "☕ Java 环境变量配置详解",
+    "path": "article/java-env-setup.html",
+    "description": "Java 开发离不开正确的环境变量配置。本文将带你一步步配置\n      JAVA_HOME、PATH 和 MAVEN_HOME。",
+    "date": "2026-06-18"
+  },
+  {
+    "title": "🟢 Node.js 环境变量配置与 .env 最佳实践",
+    "path": "article/node-env-setup.html",
+    "description": "Node.js 通过\n      process.env\n      访问环境变量。合理使用环境变量可以让你的应用更安全、更灵活。",
+    "date": "2026-06-15"
+  },
+  {
+    "title": "🔖 文章模板-这里是主标题",
+    "path": "article/article-template.html",
+    "description": "文章模板-这里是文章的简要介绍或引言，可以写一两句话概括全文内容。",
+    "date": "2004-08-15"
   }
 ]
