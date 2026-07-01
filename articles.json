@@ -1,5 +1,11 @@
 [
   {
+    "title": "🔖 Node.js 进阶能力与工程化部署完全指南",
+    "path": "article/nodejs-deployment-guide.html",
+    "description": "从掌握核心 API 到构建生产级应用，Node.js 开发者需要跨越两道门槛：一是深入理解进阶能力（进程管理、错误处理、安全、测试、性能），二是熟练运用工程化与部署工具（TypeScript、Docker、CI/CD、PM2）。本文结合大量实例，带你系统攻克这两大板块。",
+    "date": "2026-06-30"
+  },
+  {
     "title": "🔖 GitHub 项目巡礼 —— ༺心༒幻༻ 的造物清单",
     "path": "article/my-github.html",
     "description": "把几个自留地项目串起来介绍一下——从个人技术画像，到深空博客、新标签页、终端工具箱，\n      都是\"颜值 + 极简 + 一点赛博味\"这条线上的产物。下面逐个拆。",
